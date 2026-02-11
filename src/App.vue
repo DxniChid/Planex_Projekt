@@ -3,6 +3,7 @@ import { ref } from "vue"
 import logo from "@/assets/logo.png"
 
 const name =  ref("Max Mustermann");
+const name = ref("Max Mustermann")
 
 const todayItems = ref([
 
@@ -21,42 +22,39 @@ function addItem() {
 </script>
 
 <template>
-<header class="header">
-      <div class="menu">☰</div>
+  <header class="header">
+    <div class="menu">☰</div>
 
-      <img
-        :src="/assets/logo.png"
-        alt="Planex Logo"
-        class="logo-img"
-      />
-    </header>
-        <div class="welcome">
-      <h1>Willkommen</h1>
-      <h2>{{ name }}</h2>
-    </div>
+    <!-- correct image binding -->
+    <img :src="logo" alt="Planex Logo" class="logo-img" />
+  </header>
 
-      <div class="card">
-      <h3 class="card-title">Heute</h3>
+  <div class="welcome">
+    <h1>Willkommen</h1>
+    <h2>{{ name }}</h2>
+  </div>
 
-      <div class="timeline">
-        <div
-          v-for="(item, i) in todayItems"
-          :key="i"
-          class="timeline-row"
-        >
-          <div class="timeline-left">
-            <div class="dot"></div>
-            <div v-if="i !== todayItems.length - 1" class="line"></div>
-          </div>
+  <div class="card">
+    <h3 class="card-title">Heute</h3>
 
-          <div class="time">{{ item.time }}</div>
-          <div class="task">{{ item.task }}</div>
+    <div class="timeline">
+      <div
+        v-for="(item, i) in todayItems"
+        :key="i"
+        class="timeline-row"
+      >
+        <div class="timeline-left">
+          <div class="dot"></div>
+          <div v-if="i !== todayItems.length - 1" class="line"></div>
         </div>
+
+        <div class="time">{{ item.time }}</div>
+        <div class="task">{{ item.task }}</div>
       </div>
     </div>
 
- 
-
+  
+  </div>
 </template>
 
 <style scoped>
