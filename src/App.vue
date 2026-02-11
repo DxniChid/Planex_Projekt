@@ -17,22 +17,19 @@ function addItem() {
     task: "Neue Aufgabe"
   })
 }
-
-
 </script>
 
 <template>
   <header class="header">
     <div class="menu">☰</div>
 
-    <!-- correct image binding -->
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
 
-  <div class="welcome">
+
     <h1>Willkommen</h1>
     <h2>{{ name }}</h2>
-  </div>
+  
 
   <div class="card">
     <h3 class="card-title">Heute</h3>
@@ -53,16 +50,18 @@ function addItem() {
       </div>
     </div>
 
-  
+
   </div>
     <button class="add">+</button>
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
 
-.body {
+body {
   min-height: 1000px;
   background: #f4f6f8;
+    font-family: "Fredoka";
 }
 
 .header {
