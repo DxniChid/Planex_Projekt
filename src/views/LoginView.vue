@@ -26,6 +26,8 @@ export default{
 </script>
 
 <template>
+    <img src="@/assets/logo.png" alt="">
+    <h1>Anmeldung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(name, email)">
             <label for="name">Username</label> <input type="text" name="name" v-model="name">
@@ -34,6 +36,9 @@ export default{
             <button type="submit">Login</button>
         </form>
     </div>
+    <p>Kein Konto? <u>Hier</u> registrieren!</p>
+    <br>
+    <p>Passwort vergessen?</p>
 </template>
 
 <style scoped>
