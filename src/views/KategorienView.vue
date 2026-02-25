@@ -27,6 +27,7 @@ function toggleSidebar() {
     <!-- Navigation -->
     <nav class="sidebar-nav">
   <router-link to="/">Startseite</router-link>
+  <router-link to="/calendar">Kalender</router-link>
   <router-link to="/kategorien">Kategorien</router-link>
     </nav>
 
@@ -44,11 +45,54 @@ function toggleSidebar() {
   </div>
 
   <div class="card">
-    <h3 class="card-title">Test</h3>
+      <div 
+    v-for="category in categories" 
+    :key="category.id" 
+    class="category-item"
+  >
+    <span class="category-name">
+      {{ category.name }}
+    </span>
 
+    <button 
+      class="delete-btn"
+      @click="deleteCategory(category.id)"
+    >
+      ✖
+    </button>
   </div>
 
-
-   
+  </div>
 </template>
+
+<style scoped>
+  h1 {
+    font-size: 40px;
+  }
+.card {
+  height: 300px;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  margin-top: 10px;
+  background: #f4f4f4;
+  border-radius: 8px;
+}
+
+.category-name {
+  font-size: 24px;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #67889a;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
 

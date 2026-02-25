@@ -83,6 +83,7 @@ function toggleSidebar() {
     <!-- Navigation -->
     <nav class="sidebar-nav">
   <router-link to="/">Startseite</router-link>
+  <router-link to="/calendar">Kalender</router-link>
   <router-link to="/kategorien">Kategorien</router-link>
     </nav>
 
