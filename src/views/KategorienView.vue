@@ -9,6 +9,7 @@ const showSidebar = ref(false)
 function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
+
 </script>
 
 <template>
