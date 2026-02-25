@@ -15,6 +15,10 @@ Aufgrund vom schöneren Design wurde folgende Punkte verändert:
 - npm install
 - npm run dev
 - Falls alles lokal funktioniert -> Git-Repo erstellen und mit allen Mitgliedern teilen.
-  
+
+
+ Für den Kalender:
+
+- npm install vue-simple-calendar
 
 
