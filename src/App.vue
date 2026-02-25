@@ -1,6 +1,9 @@
 <script setup>
+import "@/assets/style.css"  
 import { ref } from "vue"
 import logo from "@/assets/logo.png"
+import profile from "@/assets/profile.jpg"
+
 
 const name = ref("Max Mustermann")
 
@@ -56,11 +59,40 @@ const showTextModal = ref(false)
 const newText = ref({
   content: ""
 })
+
+const showSidebar = ref(false)
+
+function toggleSidebar() {
+  showSidebar.value = !showSidebar.value
+}
 </script>
 
 <template>
   <header class="header">
-    <div class="settings">☰</div>
+    <div class="settings" @click="toggleSidebar">☰</div>
+    <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
+  <div class="sidebar">
+
+    <div class="sidebar-profile">
+      <div class="profile-pic">
+        <img :src="profile" alt="Profilbild" />
+        <div class="add-icon">+</div>
+      </div>
+      <div class="profile-name">Max Mustermann</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <a href="#">Startseite</a>
+      <a href="#">Aufgaben</a>
+      <a href="#">Kalender</a>
+      <a href="#">Kategorien</a>
+    </nav>
+
+    <!-- Settings Icon -->
+    <div class="sidebar-settings">⚙️</div>
+  </div>
+</div>
 
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
@@ -190,169 +222,5 @@ const newText = ref({
 
   </div>
 </div>
-
-
 </template>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
-
-body {
-  min-height: 1000px;
-  background: #f4f6f8;
-    font-family: "Fredoka";
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-}
-
-.settings {
-  font-size: 40px;
-  color: #A8D3E9;
-  cursor: pointer;
-}
-
-.logo-img {
-  height: 80px;
-  margin-left: 42%;
-  padding: 50px;
-}
-
-.welcome {
-  padding: 16px;
-  margin-left: 46%;
-}
-
-.card {
-  background: #D5E8F2;
-  margin-left: 37%;
-  padding: 16px;
-  width: 900px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  font-size: 20px;
-}
-
-.timeline-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
-
-}
-
-.timeline-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  background: #8AB3C2 ;
-  border-radius: 50%;
-}
-
-.line {
-  width: 2px;
-  height: 30px;
-  background: #ddd;
-  margin-top: 2px;
-}
-
-.time {
-  font-weight: bold;
-  width: 60px;
-}
-
-.task {
-  flex: 1;
-}
-
-
-.add {
-  background-color: #8AB3C2;
-  border-color: #D5E8F2;
-  margin-left: 50%;
-  margin-top: 500px;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 70px;
-  font-size: 50px;
-  color: #FFFFFF;
-  border-radius: 50%;
-  border: none;
-
-
-}
-
-
-/* Auswahl Popup */
-.choice-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.choice-box {
-  position: absolute;
-  bottom: 150px;
-  right: 45%;
-  background: #D5E8F2;
-  padding: 15px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.choice-box button {
-  background: #BFDCE9;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: #D5E8F2;
-  width: 400px;
-  padding: 25px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.input {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
