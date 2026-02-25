@@ -1,6 +1,6 @@
 # Planex_Projekt
 
-Unser Projekt, von der Gruppe Danai, Patrick und Fabian, ist eine minimalistische To-Do App, welche auf allen Geräten verfügbar ist.
+Unser Projekt, von der Gruppe Danai/Patrick/Fabian, ist eine minimalistische To-Do App, welche auf allen Geräten verfügbar ist.
 
 ## Änderungen des Projekts
 
