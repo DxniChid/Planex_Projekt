@@ -6,8 +6,8 @@ export default{
 
     data(){
         return {
-            name: null,
             email: null,
+            password: null,
             submit: false
         }
     },
@@ -26,32 +26,68 @@ export default{
 </script>
 
 <template>
-    <img src="@/assets/logo.png" alt="">
+    <img id="logo" src="@/assets/logo.png" alt="">
     <h1>Anmeldung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(name, email)">
-            <label for="name">Username</label> <input type="text" name="name" v-model="name">
+            <div id="input"><label for="name">Email</label> <br><input type="text" name="name" v-model="email"></div>
             <br>
-            <label for="email">email</label> <input type="text" name="name" v-model="email">
-            <button type="submit">Login</button>
-        </form>
+            <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password"></div>
+            <button type="submit">Anmelden</button>
+        </form> 
     </div>
-    <p>Kein Konto? <u>Hier</u> registrieren!</p>
-    <br>
+    <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
     <p>Passwort vergessen?</p>
 </template>
 
 <style scoped>
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
     #login{
         display: flex;
         justify-content: center;   
     }
-    form {
+ form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+    /* Add this line */
+    align-items: center; 
+}
+    h1, p {
         display: flex;
-        flex-direction: column;
-        flex-shrink: 2;
-        gap: 5px;
-        background-color: aquamarine;
-        padding: 20px;
+        justify-content: center;
+        font-family: Fredoka;
     }
+    h1 {
+        font-size: 60px;
+        font-weight: 400;
+    }
+    input {
+        width: 450px;
+        height: 25px;
+    }
+    #input {
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+    button {
+        margin-top: 100px;
+        width: 160px;
+        font-size: 30px;
+    }
+    label {
+        font-size: 30px;
+    }
+    img {
+        display: block;    /* Required for margin: auto to work */
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 60px;  /* Keeping your existing top margin */
+    }
+    p {
+        font-size: 25px;
+    }
+    
 </style>
