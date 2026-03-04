@@ -258,3 +258,28 @@ body {
   text-decoration: none;
   border-bottom: none !important;
 }
+}
+
+
+/* Sidebar point */
+
+.nav-link {
+  position: relative;
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: black;
+}
+
+/* Der Punkt */
+.nav-link.router-link-exact-active::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #000000;
+  border-radius: 50%;
+}

@@ -86,6 +86,12 @@ function toggleSidebar() {
   <router-link to="/kategorien">Kategorien</router-link>
 
     </nav>
+<nav class="sidebar-nav">
+  <router-link to="/" class="nav-link">Startseite</router-link>
+  <router-link to="/task" class="nav-link">Aufgaben</router-link>
+  <router-link to="/calendar" class="nav-link">Kalender</router-link>
+  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+</nav>
 
     <!-- Settings Icon -->
    <router-link
