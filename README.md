@@ -1,38 +1,24 @@
 # Planex_Projekt
 
-This template should help get you started developing with Vue 3 in Vite.
+Unser Projekt, von der Gruppe Danai/Patrick/Fabian, ist eine minimalistische To-Do App, welche auf allen Geräten verfügbar ist.
 
-## Recommended IDE Setup
+## Änderungen des Projekts
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Wir haben einige Sachen verändert, da sie uns UI-technisch viel besser gefallen haben, als auf dem Mockup von Penpot.
+Aufgrund vom schöneren Design wurde folgende Punkte verändert:
 
-## Recommended Browser Setup
+- Beim + Button, wo man zwischen Aufgabe/Freitext/Kategorie auswählen kann, haben wir die Modals von allen 3 verändert. Auf dem Mockup hat es die ganze Seite beansprucht, was nicht so schön aussah. Beim fertigen Projekt ist es nur ein kleiner Block, der auf der Mitte des Screens erscheint.
+- Bei der Kategorie Seite, wo man die Kategorienübersicht hat und sie löschen kann, haben wir die einzelnen Kategorien noch weiss umrandet, da es weicher fürs Auge ist und mehr Kontrast reinbringt.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Setup
 
-## Customize configuration
+- npm install
+- npm run dev
+- Falls alles lokal funktioniert -> Git-Repo erstellen und mit allen Mitgliedern teilen.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
+ Für den Kalender:
 
-```sh
-npm install
-```
+- npm install vue-simple-calendar
 
-### Compile and Hot-Reload for Development
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
