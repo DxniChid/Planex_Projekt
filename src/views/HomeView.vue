@@ -84,6 +84,7 @@ function toggleSidebar() {
     <nav class="sidebar-nav">
   <router-link to="/">Startseite</router-link>
   <router-link to="/kategorien">Kategorien</router-link>
+  <router-link to="/settings" class="nav-item">Settings</router-link>
     </nav>
 
     <!-- Settings Icon -->
