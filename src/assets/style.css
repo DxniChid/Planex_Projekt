@@ -255,4 +255,6 @@ body {
   margin-bottom: 30px;
   font-size: 24px;
   cursor: pointer;
+  text-decoration: none;
+  border-bottom: none !important;
 }
