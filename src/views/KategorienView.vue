@@ -10,6 +10,15 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
+const categories = ref([
+  { id: 1, name: "Arbeit" },
+  { id: 2, name: "Privat" },
+  { id: 3, name: "Sport" }
+])
+
+function deleteCategory(id) {
+  categories.value = categories.value.filter(k => k.id !== id)
+}
 </script>
 
 <template>
@@ -26,11 +35,12 @@ function toggleSidebar() {
     </div>
 
     <!-- Navigation -->
-    <nav class="sidebar-nav">
-  <router-link to="/">Startseite</router-link>
-  <router-link to="/calendar">Kalender</router-link>
-  <router-link to="/kategorien">Kategorien</router-link>
-    </nav>
+<nav class="sidebar-nav">
+  <router-link to="/" class="nav-link">Startseite</router-link>
+  <router-link to="/task" class="nav-link">Aufgaben</router-link>
+  <router-link to="/calendar" class="nav-link">Kalender</router-link>
+  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+</nav>
 
     <!-- Settings Icon -->
     <div class="sidebar-settings">⚙️</div>
