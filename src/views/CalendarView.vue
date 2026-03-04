@@ -2,6 +2,7 @@
 import { ref, computed } from "vue"
 import "@/assets/style.css"
 import logo from "@/assets/logo.png"
+import profile from "@/assets/profile.jpg"
 
 const showSidebar = ref(false)
 
@@ -114,7 +115,7 @@ function selectDay(day) {
       </div>
     </div>
 
-    <button class="overview-btn">
+    <button class="overview-btn" @click="goToTask">
       Aufgaben im Überblick
     </button>
 
@@ -179,13 +180,13 @@ function selectDay(day) {
 }
 
 .overview-btn {
-  margin-top: 40px;
+  margin-top: 100%;
   padding: 15px;
   width: 100%;
   background: #6f8fa3;
   color: white;
   border: none;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 }
 </style>
