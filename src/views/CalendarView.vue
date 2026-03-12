@@ -13,11 +13,11 @@ function toggleSidebar() {
 const currentDate = ref(new Date(2025, 11)) // Dezember 2025 (Monat 11 = Dezember)
 
 const monthNames = [
-  "Januar","Februar","März","April","Mai","Juni",
-  "Juli","August","September","Oktober","November","Dezember"
+  "Januar", "Februar", "März", "April", "Mai", "Juni",
+  "Juli", "August", "September", "Oktober", "November", "Dezember"
 ]
 
-const daysOfWeek = ["Mo","Di","Mi","Do","Fr","Sa","So"]
+const daysOfWeek = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 
 const year = computed(() => currentDate.value.getFullYear())
 const month = computed(() => currentDate.value.getMonth())
@@ -59,42 +59,46 @@ function selectDay(day) {
 </script>
 
 <template>
- <header class="header">
+  <header class="header">
     <div class="settings" @click="toggleSidebar">☰</div>
     <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
-  <div class="sidebar">
+      <div class="sidebar">
 
-    <div class="sidebar-profile">
-      <div class="profile-pic">
-        <img :src="profile" alt="Profilbild" />
+        <div class="sidebar-profile">
+          <div class="profile-pic">
+            <img :src="profile" alt="Profilbild" />
+          </div>
+          <div class="profile-name">Max Mustermann</div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+          <router-link to="/" class="nav-link">Startseite</router-link>
+          <router-link to="/task" class="nav-link">Aufgaben</router-link>
+          <router-link to="/calendar" class="nav-link">Kalender</router-link>
+          <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+        </nav>
+
+        <!-- Settings Icon -->
+        <div class="sidebar-settings">
+          <router-link to="/settings">⚙️</router-link>
+
+        </div>
       </div>
-      <div class="profile-name">Max Mustermann</div>
     </div>
-
-    <!-- Navigation -->
-<nav class="sidebar-nav">
-  <router-link to="/" class="nav-link">Startseite</router-link>
-  <router-link to="/task" class="nav-link">Aufgaben</router-link>
-  <router-link to="/calendar" class="nav-link">Kalender</router-link>
-  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
-</nav>
-
-    <!-- Settings Icon -->
-    <div class="sidebar-settings">⚙️</div>
-  </div>
-</div>
 
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
   <div class="calendar-container">
 
-   
+
 
     <div class="calendar-header">
-      <button @click="prevMonth"><</button>
-      <h2>{{ monthNames[month] }} {{ year }}</h2>
-      <button @click="nextMonth">></button>
+      <button @click="prevMonth">
+        </button>
+          <h2>{{ monthNames[month] }} {{ year }}</h2>
+          <button @click="nextMonth">></button>
     </div>
 
     <div class="weekdays">
@@ -104,13 +108,8 @@ function selectDay(day) {
     </div>
 
     <div class="days">
-      <div
-        v-for="(day, index) in daysInMonth"
-        :key="index"
-        class="day"
-        :class="{ selected: day === selectedDay }"
-        @click="day && selectDay(day)"
-      >
+      <div v-for="(day, index) in daysInMonth" :key="index" class="day" :class="{ selected: day === selectedDay }"
+        @click="day && selectDay(day)">
         {{ day }}
       </div>
     </div>

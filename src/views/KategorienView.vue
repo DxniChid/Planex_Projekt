@@ -43,7 +43,10 @@ function deleteCategory(id) {
 </nav>
 
     <!-- Settings Icon -->
-    <div class="sidebar-settings">⚙️</div>
+
+    <div class="sidebar-settings">
+    <router-link to="/settings">⚙️</router-link>
+  </div>
   </div>
 </div>
 
