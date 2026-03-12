@@ -81,6 +81,11 @@ function toggleSidebar() {
     </div>
 
     <!-- Navigation -->
+    <nav class="sidebar-nav">
+  <router-link to="/">Startseite</router-link>
+  <router-link to="/kategorien">Kategorien</router-link>
+
+    </nav>
 <nav class="sidebar-nav">
   <router-link to="/" class="nav-link">Startseite</router-link>
   <router-link to="/task" class="nav-link">Aufgaben</router-link>
@@ -89,7 +94,13 @@ function toggleSidebar() {
 </nav>
 
     <!-- Settings Icon -->
-    <div class="sidebar-settings">⚙️</div>
+   <router-link
+  to="/settings"
+  class="sidebar-settings"
+  @click="showSidebar = false"
+>
+  ⚙️
+</router-link>
   </div>
 </div>
 
@@ -221,5 +232,8 @@ function toggleSidebar() {
 
   </div>
 </div>
+
+
+
 </template>
 
