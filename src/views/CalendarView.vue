@@ -3,6 +3,9 @@ import { ref, computed } from "vue"
 import "@/assets/style.css"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import { useRouter } from "vue-router"
+
+const router = useRouter();
 
 const showSidebar = ref(false)
 
@@ -66,6 +69,12 @@ function isToday(day) {
 function selectDay(day) {
   selectedDay.value = day
 }
+
+
+function goToTask() {
+  router.push("/task")  
+}
+
 </script>
 
 <template>
