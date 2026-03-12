@@ -14,23 +14,32 @@ const newTask = ref({
   task: ""
 })
 
-function openTaskModal() {
+function openTaskModal(item = null, index = null) {
   showChoiceModal.value = false
   showTaskModal.value = true
+
+  if (item) {
+    newTask.value = { ...item }
+    editingTaskIndex.value = index
+  } else {
+    newTask.value = { title: "", task: "", time: "" }
+    editingTaskIndex.value = null
+  }
 }
 
 function createTask() {
   if (!newTask.value.task || !newTask.value.time) return
 
-  todayItems.value.push({
-    time: newTask.value.time,
-    task: newTask.value.task
-  })
+  if (editingTaskIndex.value !== null) {
+    todayItems.value[editingTaskIndex.value] = { ...newTask.value }
+  } else {
+    todayItems.value.push({ ...newTask.value })
+  }
 
-  newTask.value = { time: "", task: "" }
+  newTask.value = { title: "", task: "", time: "" }
   showTaskModal.value = false
+  editingTaskIndex.value = null
 }
-
 
 const showCategoryModal = ref(false)
 
@@ -53,7 +62,59 @@ function toggleSidebar() {
 }
 
 
+const todayItems = ref([
+  {
+    title: "Yoga",
+    time: "07:10",
+    status: "red"
+  },
+  {
+    title: "Restaurant",
+    time: "19:00",
+    status: "green"
+  }
+])
 
+const editingTaskIndex = ref(null) // speichert den Index der bearbeiteten Aufgabe
+
+
+
+const searchQuery = ref(""); 
+const showSearch = ref(false);
+
+function toggleSearch() {
+  showSearch.value = !showSearch.value;
+  searchQuery.value = ""; // reset beim Öffnen
+}
+
+const showFilterMenu = ref(false)        
+const showCategorySubmenu = ref(false)  
+const selectedStatus = ref(null)
+const selectedCategory = ref(null)
+
+const statuses = ["Erledigt", "Offen", "Kategorie"]
+const categories = ["Arbeit", "Freizeit", "Schule"]
+
+function toggleFilterMenu() {
+  showFilterMenu.value = !showFilterMenu.value
+  showCategorySubmenu.value = false  
+}
+
+function selectStatus(status) {
+  selectedStatus.value = status
+
+  if (status === "Kategorie") {
+    showCategorySubmenu.value = true
+  } else {
+    showFilterMenu.value = false
+  }
+}
+
+function selectCategory(category) {
+  selectedCategory.value = category
+  showFilterMenu.value = false
+  showCategorySubmenu.value = false
+}
 
 </script>
 <template>
@@ -87,19 +148,65 @@ function toggleSidebar() {
   </header>
 
 
-<div class="time-container">
-    <div class="timebox">
-      <h2>Heute</h2>
-    </div>
-    <div class="timebox">
-      <h2>Woche</h2>
-    </div>
-    <div class="timebox">
-      <h2>Jahr</h2>
-    </div>
-</div>
+
 
 <h1>Aufgaben</h1>
+<div class="task-area">
+
+    <div class="search-container">
+      <input
+        v-if="showSearch"
+        type="text"
+        v-model="searchQuery"
+        placeholder="Aufgaben suchen..."
+        class="search-input"
+      />
+      <div @click="toggleSearch">🔍</div>
+    </div>
+
+<div class="task-list">
+      <div
+        v-for="(item, index) in todayItems.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase()))"
+        :key="item.task"
+        class="task-box"
+      >
+        <span class="task-name">{{ item.title }}</span>
+        <span class="task-time">{{ item.time }}</span>
+        <span class="status" :class="item.status"></span>
+        <span class="edit" @click="openTaskModal(item, index)">✏️</span>
+      </div>
+    </div>
+
+<div class="filter" style="position: relative;">
+  <button @click="toggleFilterMenu">Filter ▼</button>
+
+  <div v-if="showFilterMenu" class="filter-menu">
+    <div 
+      v-for="status in statuses" 
+      :key="status" 
+      class="filter-item"
+      @click="selectStatus(status)"
+    >
+      {{ status }}
+
+      <div v-if="status === 'Kategorie' && showCategorySubmenu" class="filter-submenu">
+        <div 
+          v-for="cat in categories" 
+          :key="cat" 
+          class="filter-item"
+          @click.stop="selectCategory(cat)"
+        >
+          {{ cat }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+
   <button class="add" @click="showChoiceModal = true">+</button>    
 <div v-if="showChoiceModal" class="choice-overlay">
   <div class="choice-box">
@@ -140,7 +247,7 @@ function toggleSidebar() {
       </button>
 
       <button class="create" @click="createTask">
-        Erstellen
+        Speichern
       </button>
     </div>
 
@@ -172,7 +279,7 @@ function toggleSidebar() {
 
     <div class="modal-actions">
       <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
-      <button class="create" @click="createCategory">Erstellen</button>
+      <button class="create" @click="createCategory">Speichern</button>
     </div>
 
   </div>
@@ -193,7 +300,7 @@ function toggleSidebar() {
 
     <div class="modal-actions">
       <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-      <button class="create" @click="createText">Erstellen</button>
+      <button class="create" @click="createText">Speichern</button>
     </div>
 
   </div>
@@ -201,37 +308,129 @@ function toggleSidebar() {
 </template>
 
 <style scoped>
+
 button.add {
-  background-color: #8AB3C2;
-  border-color: #D5E8F2;
-  margin-left: 50%;
-  margin-top: 800px;
-  transform: translateX(-50%);
+  position: fixed;
+  bottom: 160px;
+  right: 1650px;
   width: 70px;
   height: 70px;
   font-size: 50px;
-  color: #FFFFFF;
-  border-radius: 50%;
+  color: #fff;
+  background-color: #8AB3C2;
   border: none;
-
-
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-.time-container {
-  display: flex;        
-  gap: 20px;             
-  justify-content: center; 
-  align-items: center;  
-}
 
-.time-container div {
-  padding: 5px;
-  background-color: #d5e8f2;
-  border: 1px solid #ccc;
-  text-align: center;
-}
+
 
 h1 {
   margin-left: 1000px;
+}
+
+.task-area{
+  width:324px;
+  margin:auto;
+  position:relative;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end; 
+  margin-bottom: 10px;
+}
+
+.search-input {
+  flex: 1;
+  max-width: 300px; 
+  padding: 5px 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+}
+
+.task-list{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-top:20px;
+  gap:10px;
+}
+
+.task-box{
+  width:300px;
+  border:2px solid black;
+  background:#c8d9e2;
+  display:flex;
+  align-items:center;
+  padding:5px 10px;
+  gap:10px;
+}
+
+.task-name{
+  flex:1;
+}
+
+.task-time{
+  margin-right:10px;
+}
+
+.status{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+}
+
+.status.red{
+  background:red;
+}
+
+.status.green{
+  background:green;
+}
+
+.filter{
+  margin-top:10px;
+}
+
+.filter button{
+  background:#c8d9e2;
+  border:2px solid black;
+  padding:5px 15px;
+}
+
+.filter-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #c8d9e2;
+  border: 2px solid black;
+  width: 77px;
+  z-index: 10;
+}
+
+.filter-item {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #999;
+  position: relative;
+}
+
+.filter-item:hover {
+  background: #b0c5d1;
+}
+
+.filter-submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #c8d9e2;
+  border: 2px solid black;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
 }
 </style>
