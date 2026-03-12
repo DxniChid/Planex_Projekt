@@ -3,6 +3,7 @@ import "@/assets/style.css"
 import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import "@/assets/laptops.css"
 
 
 const name = ref("Max Mustermann")
@@ -237,3 +238,6 @@ function toggleSidebar() {
 
 </template>
 
+<style scoped>
+
+</style>
