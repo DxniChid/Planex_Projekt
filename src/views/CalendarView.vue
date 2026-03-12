@@ -10,7 +10,8 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-const currentDate = ref(new Date(2025, 11)) // Dezember 2025 (Monat 11 = Dezember)
+const currentDate = ref(new Date(2026, 2)) 
+const today = new Date();
 
 const monthNames = [
   "Januar","Februar","März","April","Mai","Juni",
@@ -51,7 +52,16 @@ const daysInMonth = computed(() => {
   return days
 })
 
-const selectedDay = ref(null)
+const selectedDay = ref(
+  (month.value === today.getMonth() && year.value === today.getFullYear()) ? today.getDate() : null
+)
+
+function isToday(day) {
+  return day &&
+         day === today.getDate() &&
+         month.value === today.getMonth() &&
+         year.value === today.getFullYear();
+}
 
 function selectDay(day) {
   selectedDay.value = day
@@ -111,6 +121,7 @@ function selectDay(day) {
         :class="{ selected: day === selectedDay }"
         @click="day && selectDay(day)"
       >
+          <span v-if="isToday(day)" class="today-dot"></span>
         {{ day }}
       </div>
     </div>
@@ -169,14 +180,13 @@ function selectDay(day) {
   padding: 8px;
   cursor: pointer;
   border-radius: 50%;
+  position: relative;
+  text-align: center;
 }
+
 
 .day:hover {
   background: #eee;
-}
-
-.selected {
-  background: #bde5d3;
 }
 
 .overview-btn {
@@ -188,5 +198,16 @@ function selectDay(day) {
   border: none;
   font-size: 20px;
   cursor: pointer;
+}
+
+.today-dot {
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #000000;
+  border-radius: 50%;
+  left: 19px;
+  bottom: 30px;
 }
 </style>
