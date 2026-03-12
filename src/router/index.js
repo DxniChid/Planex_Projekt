@@ -6,7 +6,6 @@ import CalendarView from "@/views/CalendarView.vue"
 import TasksView from "@/views/TasksView.vue"
 
 
-
 const routes = [
   {
     path: "/",
@@ -27,17 +26,12 @@ const routes = [
     path: "/task",
     name: "task",
     component: TasksView
-
-    path: "/login",
-    name: "login",
-    component: () => import("@/views/LoginView.vue")
-  },
-    {
-    path: "/settings",
-    name: "settings",
-    component: () => import("@/views/SettingsView.vue")
   },
 
+
+
+
+  
 ]
 
 const router = createRouter({
