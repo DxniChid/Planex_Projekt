@@ -34,16 +34,19 @@ function deleteCategory(id) {
       <div class="profile-name">Max Mustermann</div>
     </div>
 
-    <!-- Navigation -->
 <nav class="sidebar-nav">
   <router-link to="/" class="nav-link">Startseite</router-link>
   <router-link to="/task" class="nav-link">Aufgaben</router-link>
   <router-link to="/calendar" class="nav-link">Kalender</router-link>
   <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
 </nav>
-
-    <!-- Settings Icon -->
-    <div class="sidebar-settings">⚙️</div>
+<router-link
+  to="/settings"
+  class="sidebar-settings"
+  @click="showSidebar = false"
+>
+  ⚙️
+</router-link>
   </div>
 </div>
 

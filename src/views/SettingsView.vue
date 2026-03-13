@@ -12,22 +12,18 @@ function goHome() {
 <template>
   <div class="settings">
 
-    <!-- Back Button -->
     <div class="back" @click="goHome">←</div>
 
-    <!-- Profil -->
     <div class="profile">
       <img :src="profile" class="profile-img" />
       <p class="name">Max Mustermann</p>
     </div>
 
-    <!-- Buttons -->
     <div class="menu">
       <button>Sprachen</button>
       <button>Design</button>
       <button>Geräte</button>
 
-      <!-- Auto Login (unter Buttons) -->
       <div class="autologin">
         <label class="autologin-label">
           <span>Automatisch einloggen</span>
@@ -36,7 +32,6 @@ function goHome() {
       </div>
     </div>
 
-    <!-- Bottom -->
     <div class="bottom">
       <span>Ausloggen</span>
       <span>Support</span>
@@ -49,6 +44,10 @@ function goHome() {
 .settings {
   padding: 20px;
   color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .back {
@@ -81,7 +80,6 @@ function goHome() {
   align-items: center;
 }
 
-/* Buttons nicht volle Breite */
 .menu button {
   width: min(320px, 80%);
   padding: 12px;
@@ -91,7 +89,6 @@ function goHome() {
   cursor: pointer;
 }
 
-/* Autologin unter den Buttons */
 .autologin {
   margin-top: 10px;
 }
@@ -104,14 +101,13 @@ function goHome() {
   font-size: 20px;
   white-space: nowrap;
 }
-/* Footer unten fix */
 .bottom {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: space-between;
+  gap: 40px;
   font-size: 22px;
 }
 </style>

@@ -97,7 +97,13 @@ function goToTask() {
   <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
 </nav>
 
-    <div class="sidebar-settings">⚙️</div>
+<router-link
+  to="/settings"
+  class="sidebar-settings"
+  @click="showSidebar = false"
+>
+  ⚙️
+</router-link>  
   </div>
 </div>
 
