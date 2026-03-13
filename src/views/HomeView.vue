@@ -84,12 +84,7 @@ function toggleSidebar() {
       <div class="profile-name">Max Mustermann</div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="sidebar-nav">
-  <router-link to="/">Startseite</router-link>
-  <router-link to="/kategorien">Kategorien</router-link>
 
-    </nav>
 <nav class="sidebar-nav">
   <router-link to="/" class="nav-link">Startseite</router-link>
   <router-link to="/task" class="nav-link">Aufgaben</router-link>
