@@ -92,8 +92,7 @@ function toggleSidebar() {
   <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
 </nav>
 
-    <!-- Settings Icon -->
-   <router-link
+<router-link
   to="/settings"
   class="sidebar-settings"
   @click="showSidebar = false"

@@ -153,7 +153,6 @@ const filteredItems = computed(() => {
           <div class="profile-name">Max Mustermann</div>
         </div>
 
-        <!-- Navigation -->
         <nav class="sidebar-nav">
           <router-link to="/" class="nav-link">Startseite</router-link>
           <router-link to="/task" class="nav-link">Aufgaben</router-link>
@@ -161,10 +160,15 @@ const filteredItems = computed(() => {
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
         </nav>
 
-        <!-- Settings Icon -->
-        <div class="sidebar-settings">⚙️</div>
-      </div>
+<router-link
+  to="/settings"
+  class="sidebar-settings"
+  @click="showSidebar = false"
+>
+  ⚙️
+</router-link>      
     </div>
+  </div>
 
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />

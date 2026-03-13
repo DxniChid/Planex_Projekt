@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue"
 import KategorienView from "@/views/KategorienView.vue"
 import CalendarView from "@/views/CalendarView.vue"
 import TasksView from "@/views/TasksView.vue"
+import SettingsView from "@/views/SettingsView.vue"
 
 
 const routes = [
@@ -27,6 +28,11 @@ const routes = [
     name: "task",
     component: TasksView
   },
+  {
+    path: "/settings",
+    name: "settings",
+    component: SettingsView
+  }
 
 
 
