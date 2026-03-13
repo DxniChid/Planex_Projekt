@@ -3,6 +3,10 @@ import "@/assets/style.css"
 import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import "@/assets/laptops.css"
+import "@/assets/phones.css"
+
+
 
 
 const name = ref("Max Mustermann")
@@ -80,12 +84,7 @@ function toggleSidebar() {
       <div class="profile-name">Max Mustermann</div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="sidebar-nav">
-  <router-link to="/">Startseite</router-link>
-  <router-link to="/kategorien">Kategorien</router-link>
 
-    </nav>
 <nav class="sidebar-nav">
   <router-link to="/" class="nav-link">Startseite</router-link>
   <router-link to="/task" class="nav-link">Aufgaben</router-link>
@@ -237,3 +236,6 @@ function toggleSidebar() {
 
 </template>
 
+<style scoped>
+
+</style>
