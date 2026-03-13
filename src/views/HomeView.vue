@@ -4,6 +4,9 @@ import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 import "@/assets/laptops.css"
+import "@/assets/phones.css"
+
+
 
 
 const name = ref("Max Mustermann")
