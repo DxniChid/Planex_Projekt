@@ -90,7 +90,6 @@ function goToTask() {
       <div class="profile-name">Max Mustermann</div>
     </div>
 
-    <!-- Navigation -->
 <nav class="sidebar-nav">
   <router-link to="/" class="nav-link">Startseite</router-link>
   <router-link to="/task" class="nav-link">Aufgaben</router-link>
@@ -98,7 +97,6 @@ function goToTask() {
   <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
 </nav>
 
-    <!-- Settings Icon -->
     <div class="sidebar-settings">⚙️</div>
   </div>
 </div>
@@ -199,7 +197,7 @@ function goToTask() {
 }
 
 .overview-btn {
-  margin-top: 100%;
+  margin-top: 60%;
   padding: 15px;
   width: 100%;
   background: #6f8fa3;

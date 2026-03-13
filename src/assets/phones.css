@@ -53,4 +53,15 @@
     transform: none;
   }
 
+  .overview-btn {
+  margin-top: 20%;
+  padding: 15px;
+  width: 100%;
+  background: #6f8fa3;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 }
