@@ -5,6 +5,7 @@ import KategorienView from "@/views/KategorienView.vue"
 import CalendarView from "@/views/CalendarView.vue"
 import TasksView from "@/views/TasksView.vue"
 import SettingsView from "@/views/SettingsView.vue"
+import LoginView from "@/views/LoginView.vue"
 
 
 const routes = [
@@ -32,7 +33,14 @@ const routes = [
     path: "/settings",
     name: "settings",
     component: SettingsView
-  }
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: LoginView
+  },
+
+
 
 
 
