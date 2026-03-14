@@ -6,6 +6,7 @@ import CalendarView from "@/views/CalendarView.vue"
 import TasksView from "@/views/TasksView.vue"
 import SettingsView from "@/views/SettingsView.vue"
 import LoginView from "@/views/LoginView.vue"
+import SignUpView from "@/views/SignUpView.vue"
 
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginView
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignUpView
   },
 
 
