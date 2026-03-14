@@ -3,9 +3,10 @@ import "@/assets/style.css"
 import { ref, computed } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import { useTaskStore } from "@/stores/taskStore"
 
 
-
+const store = useTaskStore()
 const showChoiceModal = ref(false)
 const showTaskModal = ref(false)
 
@@ -28,12 +29,12 @@ function openTaskModal(item = null, index = null) {
 }
 
 function createTask() {
-  if (!newTask.value.task || !newTask.value.time) return
-
+  if (!newTask.value.task || !newTask.value.time) 
+    return
   if (editingTaskIndex.value !== null) {
-    todayItems.value[editingTaskIndex.value] = { ...newTask.value }
+    store.updateTask(editingTaskIndex.value, {...newTask.value})
   } else {
-    todayItems.value.push({ ...newTask.value })
+    store.addTask({...newTask.value})
   }
 
   newTask.value = { title: "", task: "", time: "" }
@@ -52,7 +53,7 @@ function createText() {
 }
 
 function deleteTask(index) {
-  todayItems.value.splice(index, 1)
+  store.deleteTask(index)
 }
 
 const showCategoryModal = ref(false)
@@ -76,18 +77,7 @@ function toggleSidebar() {
 }
 
 
-const todayItems = ref([
-  {
-    title: "Yoga",
-    time: "07:10",
-    status: "red"
-  },
-  {
-    title: "Restaurant",
-    time: "19:00",
-    status: "green"
-  }
-])
+const todayItems = store.tasks
 
 const editingTaskIndex = ref(null) // speichert den Index der bearbeiteten Aufgabe
 

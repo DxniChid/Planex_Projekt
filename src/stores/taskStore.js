@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
-import { Update } from "vite";
 import { ref, computed } from "vue"
 
 export const useTaskStore = defineStore("tasks", () => {
-    const tasks = ([
+    const tasks = ref ([
         {
             title: "Yoga",
             task: "Every Morning yoga",
@@ -21,20 +20,20 @@ export const useTaskStore = defineStore("tasks", () => {
     ])
 
     const getByStatus = computed(() =>
-        (status) => tasks.values.filter(t => t.status === status)
+        (status) => tasks.value.filter(t => t.status === status)
     )
     const getByCategory = computed(() =>
-        (category) => tasks.values.filter(t => t.category === category)
+        (category) => tasks.value.filter(t => t.category === category)
     )
 
     function addTask(task) {
-        tasks.values.push({...task})
+        tasks.value.push({...task})
     }
     function updateTask(index, updateTask){
-        tasks.values[index] = {...updateTask}
+        tasks.value[index] = {...updateTask}
     }
     function deleteTask(index){
-        tasks.values.splice(index, 1)
+        tasks.value.splice(index, 1)
     }
 
     return {
