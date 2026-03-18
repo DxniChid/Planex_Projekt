@@ -6,6 +6,7 @@ import profile from "@/assets/profile.jpg"
 
 const showChoiceModal = ref(false)
 const showTaskModal = ref(false)
+const showCategoryModal = ref(false)
 
 const newTask = ref({
   title: "",
@@ -14,6 +15,12 @@ const newTask = ref({
   status: "red",
   category: null
 })
+
+const newCategory = ref({
+  name: ""
+})
+
+let nextCategoryId = 4
 
 function openTaskModal(item = null, index = null) {
   showChoiceModal.value = false
@@ -53,6 +60,18 @@ function createText() {
 
 function deleteTask(index) {
   todayItems.value.splice(index, 1)
+}
+
+function createCategory() {
+  if (!newCategory.value.name) return
+
+  categories.value.push({
+    id: nextCategoryId++,
+    name: newCategory.value.name
+  })
+
+  newCategory.value = { name: "" }
+  showCategoryModal.value = false
 }
 
 const showTextModal = ref(false)
@@ -167,13 +186,9 @@ const filteredItems = computed(() => {
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
         </nav>
 
-        <router-link
-          to="/settings"
-          class="sidebar-settings"
-          @click="showSidebar = false"
-        >
+        <router-link to="/settings" class="sidebar-settings" @click="showSidebar = false">
           ⚙️
-        </router-link>      
+        </router-link>
       </div>
     </div>
 
@@ -224,6 +239,7 @@ const filteredItems = computed(() => {
     <div class="choice-box">
       <button @click="openTaskModal">Aufgabe</button>
       <button @click="showTextModal = true; showChoiceModal = false">Freitext</button>
+      <button @click="showCategoryModal = true; showChoiceModal = false">Kategorie</button>
     </div>
   </div>
 
@@ -275,6 +291,22 @@ const filteredItems = computed(() => {
 
     </div>
   </div>
+
+  <div v-if="showCategoryModal" class="modal-overlay">
+    <div class="modal">
+
+      <h2>Kategorie erstellen</h2>
+
+      <input type="text" v-model="newCategory.name" placeholder="Kategoriename (max. 30 Zeichen)" maxlength="30"
+        class="input" />
+
+      <div class="modal-actions">
+        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Speichern</button>
+      </div>
+
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -295,7 +327,7 @@ button.add {
   align-items: center;
   justify-content: center;
   line-height: 1;
-  padding:0;
+  padding: 0;
 }
 
 h1 {
@@ -395,15 +427,16 @@ h1 {
   left: 0;
   background: #c8d9e2;
   border: 2px solid black;
-  width: 77px;
+  width: 67px;
   z-index: 10;
 }
 
 .filter-item {
-  padding: 5px 10px;
+  padding: 5px;
   cursor: pointer;
   border-bottom: 1px solid #999;
   position: relative;
+  font-size: 14px;
 }
 
 .filter-item:hover {
@@ -435,7 +468,7 @@ h1 {
 }
 
 .modal {
-  background: white;
+  background: #d5e8f2;
   border-radius: 8px;
   padding: 20px;
   max-width: 400px;
@@ -443,11 +476,7 @@ h1 {
 }
 
 .input {
-  width: 100%;
-  padding: 8px 0px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 12px;
+  padding: 8px;
   font-size: 14px;
 }
 
@@ -496,8 +525,4 @@ h1 {
   justify-content: center;
   z-index: 100;
 }
-
-
-
-
 </style>
