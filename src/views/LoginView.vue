@@ -19,6 +19,9 @@ export default{
                 this.$router.push("/")
                 
             }
+        },
+        goToSignup() {
+            this.$router.push("/signup")  
         }
     }
 }
@@ -36,9 +39,9 @@ export default{
             <button type="submit">Anmelden</button>
         </form> 
     </div>
-    <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
-    <p>Passwort vergessen?</p>
-</template>
+    <p>Kein Konto? &nbsp;
+        <u @click="goToSignup" style="cursor: pointer;">Hier</u>&nbsp; registrieren!
+    </p></template>
 
 <style scoped>
 
