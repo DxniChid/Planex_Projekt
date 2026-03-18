@@ -17,10 +17,7 @@ export default{
     methods: {
         checkAcc(prename, email){
             if(true){
-                alert("Hello " + prename + "your email: " + email)
-                this.submit = true
                 this.$router.push("/login")
-                
             }
         }
     }
@@ -30,18 +27,18 @@ export default{
 
 <template>
     <img id="logo" src="@/assets/logo.png" alt="">
-    <h1>Registierung</h1>
+    <h1>Registrierung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(name, email)">
-            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename"></div>
+            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename" required></div>
             <br>
             <div id="input"><label for="name">Nachname</label> <br><input type="text" name="name" v-model="name"></div>
             <br>
-            <div id="input"><label for="name">Email*</label> <br><input type="email" name="name" v-model="email"></div>
+            <div id="input"><label for="name">Email*</label> <br><input type="email" name="name" v-model="email" required></div>
             <br>
-            <div id="input"><label for="name">Passwort*</label> <br><input type="password" name="name" v-model="password"></div>
+            <div id="input"><label for="name">Passwort*</label> <br><input type="password" name="name" v-model="password" required></div>
             <br>
-            <div id="input"><label for="name">Passwort bestätigen*</label> <br><input type="password" name="name" v-model="confirmation"></div>
+            <div id="input"><label for="name">Passwort bestätigen*</label> <br><input type="password" name="name" v-model="confirmation" required></div>
             <br>
             <button type="submit">Registrieren</button>
         </form> 

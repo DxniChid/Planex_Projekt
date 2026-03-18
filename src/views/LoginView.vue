@@ -14,8 +14,6 @@ export default{
     methods: {
         checkAcc(name, email){
             if(true){
-                alert("Hello " + name + "your email: " + email)
-                this.submit = true
                 this.$router.push("/")
                 
             }
@@ -30,14 +28,13 @@ export default{
     <h1>Anmeldung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(name, email)">
-            <div id="input"><label for="name">Email</label> <br><input type="text" name="name" v-model="email"></div>
+            <div id="input"><label for="name">Email</label> <br><input type="email" name="name" v-model="email" required></div>
             <br>
-            <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password"></div>
+            <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password" required></div>
             <button type="submit">Anmelden</button>
         </form> 
     </div>
     <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
-    <p>Passwort vergessen?</p>
 </template>
 
 <style scoped>
@@ -52,7 +49,6 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
-    /* Add this line */
     align-items: center; 
 }
     h1, p {

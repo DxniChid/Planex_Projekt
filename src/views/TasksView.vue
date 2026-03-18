@@ -114,7 +114,9 @@ const showFilterMenu = ref(false)
 const showCategorySubmenu = ref(false)
 const selectedStatus = ref(null)
 const selectedCategory = ref(null)
-const statuses = ["Alle", "Offen", "Erledigt", "Kategorie"]
+
+const statuses = ["Alle", "Offen","Erledigt" ,"Kategorie"]
+const categories = ["Arbeit", "Freizeit", "Schule"]
 
 function toggleFilterMenu() {
   showFilterMenu.value = !showFilterMenu.value
