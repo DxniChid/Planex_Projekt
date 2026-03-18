@@ -10,7 +10,7 @@ const showCategoryModal = ref(false)
 
 const newTask = ref({
   title: "",
-  task: "", // Optional description
+  task: "", 
   time: "",
   status: "red",
   category: null
@@ -40,7 +40,6 @@ function openTaskModal(item = null, index = null) {
 }
 
 function createTask() {
-  // FIX: Changed check from .task to .title so it doesn't block saving
   if (!newTask.value.title || !newTask.value.time) {
     alert("Bitte Titel und Uhrzeit angeben!");
     return
@@ -58,6 +57,10 @@ function createTask() {
 }
 
 const texts = ref([])
+const showTextModal = ref(false)
+const newText = ref({
+  content: ""
+})
 
 function createText() {
   if (!newText.value.content) return
@@ -82,13 +85,7 @@ function createCategory() {
   showCategoryModal.value = false
 }
 
-const showTextModal = ref(false)
-const newText = ref({
-  content: ""
-})
-
 const showSidebar = ref(false)
-
 function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
@@ -100,22 +97,11 @@ const categories = ref([
 ])
 
 const todayItems = ref([
-  {
-    title: "Yoga",
-    time: "07:10",
-    status: "red",
-    category: null
-  },
-  {
-    title: "Restaurant",
-    time: "19:00",
-    status: "green",
-    category: 2
-  }
+  { title: "Yoga", time: "07:10", status: "red", category: null },
+  { title: "Restaurant", time: "19:00", status: "green", category: 2 }
 ])
 
 const editingTaskIndex = ref(null)
-
 const searchQuery = ref("")
 const showSearch = ref(false)
 
@@ -128,7 +114,6 @@ const showFilterMenu = ref(false)
 const showCategorySubmenu = ref(false)
 const selectedStatus = ref(null)
 const selectedCategory = ref(null)
-
 const statuses = ["Alle", "Offen", "Erledigt", "Kategorie"]
 
 function toggleFilterMenu() {
@@ -209,8 +194,10 @@ const filteredItems = computed(() => {
     <div class="task-list">
       <div v-for="(item, index) in filteredItems" :key="index" class="task-box">
         <span class="task-name">{{ item.title }}</span>
-        <span class="task-time">{{ item.time }}</span>
+        
         <span v-if="item.category" class="task-category">{{ getCategoryName(item.category) }}</span>
+        <span class="task-time">{{ item.time }}</span>
+        
         <span class="status" :class="item.status" @click="toggleTaskStatus(item)" style="cursor: pointer;"></span>
         <span class="edit" @click="openTaskModal(item, todayItems.indexOf(item))">✏️</span>
         <span class="icon-btn delete-btn" @click="deleteTask(todayItems.indexOf(item))">🗑️</span>
@@ -245,11 +232,9 @@ const filteredItems = computed(() => {
   <div v-if="showTaskModal" class="modal-overlay" @click.self="showTaskModal = false">
     <div class="modal">
       <h3>{{ editingTaskIndex !== null ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}</h3>
-      
-      <input type="text" v-model="newTask.title" placeholder="Titel (z.B. Yoga)" class="input" />
-      <input type="text" v-model="newTask.task" placeholder="Beschreibung (optional)" maxlength="100" class="input" />
-      <input type="time" v-model="newTask.time" class="input" />
-
+      <input type="text" v-model="newTask.title" placeholder="Titel" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
+      <input type="text" v-model="newTask.task" placeholder="Beschreibung" maxlength="100" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
+      <input type="time" v-model="newTask.time" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
       <div style="margin: 15px 0;">
         <label style="display: block; margin-bottom: 5px; font-weight: bold;">Kategorie:</label>
         <select v-model.number="newTask.category" class="category-select" style="width: 100%; padding: 8px;">
@@ -257,7 +242,6 @@ const filteredItems = computed(() => {
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
         </select>
       </div>
-
       <div class="modal-actions">
         <button class="cancel" @click="showTaskModal = false">Abbrechen</button>
         <button class="create" @click="createTask">Speichern</button>
@@ -265,7 +249,28 @@ const filteredItems = computed(() => {
     </div>
   </div>
 
-  </template>
+  <div v-if="showTextModal" class="modal-overlay" @click.self="showTextModal = false">
+    <div class="modal">
+      <h3>Freitext</h3>
+      <textarea v-model="newText.content" class="input" rows="5" style="width: 100%; resize: none; box-sizing: border-box;"></textarea>
+      <div class="modal-actions">
+        <button class="cancel" @click="showTextModal = false">Abbrechen</button>
+        <button class="create" @click="createText">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="showCategoryModal" class="modal-overlay" @click.self="showCategoryModal = false">
+    <div class="modal">
+      <h3>Kategorie erstellen</h3>
+      <input type="text" v-model="newCategory.name" placeholder="Kategoriename" maxlength="30" class="input" style="width: 100%; box-sizing: border-box;" />
+      <div class="modal-actions">
+        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Erstellen</button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 button.add {
