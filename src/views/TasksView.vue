@@ -106,7 +106,7 @@ const showCategorySubmenu = ref(false)
 const selectedStatus = ref(null)
 const selectedCategory = ref(null)
 
-const statuses = ["Erledigt", "Offen", "Kategorie"]
+const statuses = ["Erledigt", "Offen", "Alle","Kategorie"]
 const categories = ["Arbeit", "Freizeit", "Schule"]
 
 function toggleFilterMenu() {
@@ -117,6 +117,11 @@ function toggleFilterMenu() {
 function selectStatus(status) {
   if (status === "Kategorie") {
     showCategorySubmenu.value = true
+  } else if (status === "Alle") {
+    selectedStatus.value = null
+    selectedCategory.value = null
+    showFilterMenu.value = false
+    showCategorySubmenu.value = false
   } else {
     selectedStatus.value = status === "Erledigt" ? "green" : "red"
     selectedCategory.value = null
