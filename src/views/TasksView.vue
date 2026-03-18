@@ -4,15 +4,23 @@ import { ref, computed } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 
-
-
 const showChoiceModal = ref(false)
 const showTaskModal = ref(false)
+const showCategoryModal = ref(false)
 
 const newTask = ref({
+  title: "",
+  task: "",
   time: "",
-  task: ""
+  status: "red",
+  category: null
 })
+
+const newCategory = ref({
+  name: ""
+})
+
+let nextCategoryId = 4
 
 function openTaskModal(item = null, index = null) {
   showChoiceModal.value = false
@@ -22,7 +30,7 @@ function openTaskModal(item = null, index = null) {
     newTask.value = { ...item }
     editingTaskIndex.value = index
   } else {
-    newTask.value = { title: "", task: "", time: "" }
+    newTask.value = { title: "", task: "", time: "", status: "red", category: null }
     editingTaskIndex.value = null
   }
 }
@@ -36,11 +44,10 @@ function createTask() {
     todayItems.value.push({ ...newTask.value })
   }
 
-  newTask.value = { title: "", task: "", time: "" }
+  newTask.value = { title: "", task: "", time: "", status: "red", category: null }
   showTaskModal.value = false
   editingTaskIndex.value = null
 }
-
 
 const texts = ref([])
 
@@ -55,19 +62,22 @@ function deleteTask(index) {
   todayItems.value.splice(index, 1)
 }
 
-const showCategoryModal = ref(false)
+function createCategory() {
+  if (!newCategory.value.name) return
 
-const newCategory = ref({
-  name: "",
-  color: "#8AB3C2"
-})
+  categories.value.push({
+    id: nextCategoryId++,
+    name: newCategory.value.name
+  })
 
+  newCategory.value = { name: "" }
+  showCategoryModal.value = false
+}
 
 const showTextModal = ref(false)
 const newText = ref({
   content: ""
 })
-
 
 const showSidebar = ref(false)
 
@@ -75,30 +85,35 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
+const categories = ref([
+  { id: 1, name: "Arbeit" },
+  { id: 2, name: "Freizeit" },
+  { id: 3, name: "Schule" }
+])
 
 const todayItems = ref([
   {
     title: "Yoga",
     time: "07:10",
-    status: "red"
+    status: "red",
+    category: null
   },
   {
     title: "Restaurant",
     time: "19:00",
-    status: "green"
+    status: "green",
+    category: 2
   }
 ])
 
-const editingTaskIndex = ref(null) // speichert den Index der bearbeiteten Aufgabe
+const editingTaskIndex = ref(null)
 
-
-
-const searchQuery = ref("");
-const showSearch = ref(false);
+const searchQuery = ref("")
+const showSearch = ref(false)
 
 function toggleSearch() {
-  showSearch.value = !showSearch.value;
-  searchQuery.value = ""; // reset beim Öffnen
+  showSearch.value = !showSearch.value
+  searchQuery.value = ""
 }
 
 const showFilterMenu = ref(false)
@@ -106,8 +121,7 @@ const showCategorySubmenu = ref(false)
 const selectedStatus = ref(null)
 const selectedCategory = ref(null)
 
-const statuses = ["Alle", "Offen","Erledigt" ,"Kategorie"]
-const categories = ["Arbeit", "Freizeit", "Schule"]
+const statuses = ["Alle", "Offen", "Erledigt", "Kategorie"]
 
 function toggleFilterMenu() {
   showFilterMenu.value = !showFilterMenu.value
@@ -130,11 +144,18 @@ function selectStatus(status) {
   }
 }
 
-function selectCategory(category) {
-  selectedCategory.value = category
+function selectCategory(categoryId) {
+  selectedCategory.value = categoryId
   showFilterMenu.value = false
   showCategorySubmenu.value = false
 }
+
+function getCategoryName(categoryId) {
+  if (!categoryId) return null
+  const cat = categories.value.find(c => c.id === categoryId)
+  return cat ? cat.name : null
+}
+
 const filteredItems = computed(() => {
   return todayItems.value.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -143,8 +164,8 @@ const filteredItems = computed(() => {
     return matchesSearch && matchesStatus && matchesCategory
   })
 })
-
 </script>
+
 <template>
   <header class="header">
     <div class="settings" @click="toggleSidebar">☰</div>
@@ -166,22 +187,14 @@ const filteredItems = computed(() => {
           <router-link to="/freetext" class="nav-link">Freitext</router-link>
         </nav>
 
-<router-link
-  to="/settings"
-  class="sidebar-settings"
-  @click="showSidebar = false"
->
-  ⚙️
-</router-link>      
+        <router-link to="/settings" class="sidebar-settings" @click="showSidebar = false">
+          ⚙️
+        </router-link>
+      </div>
     </div>
-  </div>
-
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
-
-
-
 
   <h1>Aufgaben</h1>
   <div class="task-area">
@@ -196,6 +209,7 @@ const filteredItems = computed(() => {
       <div v-for="(item, index) in filteredItems" :key="index" class="task-box">
         <span class="task-name">{{ item.title }}</span>
         <span class="task-time">{{ item.time }}</span>
+        <span v-if="item.category" class="task-category">{{ getCategoryName(item.category) }}</span>
         <span class="status" :class="item.status"></span>
         <span class="edit" @click="openTaskModal(item, todayItems.indexOf(item))">✏️</span>
         <span class="icon-btn delete-btn" @click="deleteTask(todayItems.indexOf(item))" title="Löschen">🗑️</span>
@@ -210,8 +224,8 @@ const filteredItems = computed(() => {
           {{ status }}
 
           <div v-if="status === 'Kategorie' && showCategorySubmenu" class="filter-submenu">
-            <div v-for="cat in categories" :key="cat" class="filter-item" @click.stop="selectCategory(cat)">
-              {{ cat }}
+            <div v-for="cat in categories" :key="cat.id" class="filter-item" @click.stop="selectCategory(cat.id)">
+              {{ cat.name }}
             </div>
           </div>
 
@@ -220,7 +234,6 @@ const filteredItems = computed(() => {
     </div>
 
   </div>
-
 
   <button class="add" @click="showChoiceModal = true">+</button>
   <div v-if="showChoiceModal" class="choice-overlay">
@@ -242,6 +255,16 @@ const filteredItems = computed(() => {
 
       <input type="time" v-model="newTask.time" class="input" />
 
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Kategorie:</label>
+        <select v-model.number="newTask.category" class="category-select">
+          <option :value="null">Keine Kategorie</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
+
       <div class="modal-actions">
         <button class="cancel" @click="showTaskModal = false">
           Abbrechen
@@ -250,27 +273,6 @@ const filteredItems = computed(() => {
         <button class="create" @click="createTask">
           Speichern
         </button>
-      </div>
-
-    </div>
-  </div>
-
-
-  <div v-if="showCategoryModal" class="modal-overlay">
-    <div class="modal">
-
-      <h2>Kategorie erstellen</h2>
-
-      <input type="text" v-model="newCategory.name" placeholder="Name (max. 30 Zeichen)" maxlength="50" class="input" />
-
-
-      <label>Farbe wählen:</label>
-      <input type="color" v-model="newCategory.color" class="input"
-        style="height: 50px; width: 100%; padding: 0; border-radius: 8px;" />
-
-      <div class="modal-actions">
-        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
-        <button class="create" @click="createCategory">Speichern</button>
       </div>
 
     </div>
@@ -286,6 +288,22 @@ const filteredItems = computed(() => {
       <div class="modal-actions">
         <button class="cancel" @click="showTextModal = false">Abbrechen</button>
         <button class="create" @click="createText">Speichern</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div v-if="showCategoryModal" class="modal-overlay">
+    <div class="modal">
+
+      <h2>Kategorie erstellen</h2>
+
+      <input type="text" v-model="newCategory.name" placeholder="Kategoriename (max. 30 Zeichen)" maxlength="30"
+        class="input" />
+
+      <div class="modal-actions">
+        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Speichern</button>
       </div>
 
     </div>
@@ -310,11 +328,8 @@ button.add {
   align-items: center;
   justify-content: center;
   line-height: 1;
-  padding:0;
+  padding: 0;
 }
-
-
-
 
 h1 {
   text-align: center;
@@ -369,6 +384,20 @@ h1 {
   margin-right: 10px;
 }
 
+.task-category {
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.category-select {
+  width: 100%;
+  padding: 5px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
 .status {
   width: 10px;
   height: 10px;
@@ -399,15 +428,16 @@ h1 {
   left: 0;
   background: #c8d9e2;
   border: 2px solid black;
-  width: 77px;
+  width: 67px;
   z-index: 10;
 }
 
 .filter-item {
-  padding: 5px 10px;
+  padding: 5px;
   cursor: pointer;
   border-bottom: 1px solid #999;
   position: relative;
+  font-size: 14px;
 }
 
 .filter-item:hover {
@@ -423,5 +453,77 @@ h1 {
   width: 70px;
   display: flex;
   flex-direction: column;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #d5e8f2;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.input {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancel {
+  background: #ccc;
+  color: #333;
+}
+
+.cancel:hover {
+  background: #bbb;
+}
+
+.create {
+  background: #8AB3C2;
+  color: white;
+}
+
+.create:hover {
+  background: #6a94a8;
+}
+
+.choice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
 </style>
