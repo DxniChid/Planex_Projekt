@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from "vue-router"
 
 import HomeView from "@/views/HomeView.vue"
 import KategorienView from "@/views/KategorienView.vue"
+import CalendarView from "@/views/CalendarView.vue"
+import TasksView from "@/views/TasksView.vue"
+import SettingsView from "@/views/SettingsView.vue"
+import LoginView from "@/views/LoginView.vue"
+import SignUpView from "@/views/SignUpView.vue"
+import FreeTextView from "@/views/FreeTextView.vue"
 
 
 const routes = [
@@ -16,10 +22,42 @@ const routes = [
     component: KategorienView
   },
   {
+    path: "/calendar",
+    name: "calendar",
+    component: CalendarView
+  }, 
+  {
+    path: "/task",
+    name: "task",
+    component: TasksView
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: SettingsView
+  },
+  {
     path: "/login",
     name: "login",
-    component: () => import("@/views/LoginView.vue")
+    component: LoginView
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: SignUpView
+  },
+  {
+    path: "/freetext",
+    name: "freetext",
+    component: FreeTextView
   }
+
+
+
+
+
+
+  
 ]
 
 const router = createRouter({

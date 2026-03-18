@@ -6,20 +6,19 @@ export default{
 
     data(){
         return {
+            prename: null,
+            name: null,
             email: null,
             password: null,
+            confirmation: null,
             submit: false
         }
     },
     methods: {
-        checkAcc(name, email){
+        checkAcc(prename, email){
             if(true){
-                this.$router.push("/")
-                
+                this.$router.push("/login")
             }
-        },
-        goToSignup() {
-            this.$router.push("/signup")  
         }
     }
 }
@@ -28,16 +27,23 @@ export default{
 
 <template>
     <img id="logo" src="@/assets/logo.png" alt="">
-    <h1>Anmeldung</h1>
+    <h1>Registrierung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(name, email)">
-            <div id="input"><label for="name">Email</label> <br><input type="email" name="name" v-model="email" required></div>
+            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename" required></div>
             <br>
-            <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password" required></div>
-            <button type="submit">Anmelden</button>
+            <div id="input"><label for="name">Nachname</label> <br><input type="text" name="name" v-model="name"></div>
+            <br>
+            <div id="input"><label for="name">Email*</label> <br><input type="email" name="name" v-model="email" required></div>
+            <br>
+            <div id="input"><label for="name">Passwort*</label> <br><input type="password" name="name" v-model="password" required></div>
+            <br>
+            <div id="input"><label for="name">Passwort bestätigen*</label> <br><input type="password" name="name" v-model="confirmation" required></div>
+            <br>
+            <button type="submit">Registrieren</button>
         </form> 
     </div>
-    <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
+    <p>Bereits ein Konto? Klicken Sie &nbsp; <RouterLink to="/login"> <u style="cursor: pointer;" >Hier</u></RouterLink></p>
 </template>
 
 <style scoped>
@@ -52,6 +58,7 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
+    /* Add this line */
     align-items: center; 
 }
     h1, p {
@@ -68,12 +75,12 @@ export default{
         height: 25px;
     }
     #input {
-        margin-bottom: 30px;
-        margin-top: 30px;
+        margin-bottom: 10px;
+        margin-top: 10px;
     }
     button {
-        margin-top: 100px;
-        width: 160px;
+        margin-top: 30px;
+        width: 180px;
         font-size: 30px;
     }
     label {

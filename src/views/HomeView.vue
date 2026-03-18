@@ -1,8 +1,11 @@
 <script setup>
 import "@/assets/style.css"  
-import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import "@/assets/laptops.css"
+import "@/assets/phones.css"
+import { ref, onMounted } from "vue"
+
 
 
 const name = ref("Max Mustermann")
@@ -29,6 +32,28 @@ const newTask = ref({
   task: ""
 })
 
+const freeTexts = ref([])
+
+// 🔹 Local storage beim Mount laden
+onMounted(() => {
+  const savedTexts = localStorage.getItem("freeTexts")
+  if (savedTexts) {
+    freeTexts.value = JSON.parse(savedTexts)
+  }
+})
+function createText() {
+  if (!newText.value.content.trim()) return
+
+  freeTexts.value.push({
+    id: Date.now(),
+    content: newText.value.content
+  })
+
+  localStorage.setItem("freeTexts", JSON.stringify(freeTexts.value))
+
+  newText.value.content = ""
+  showTextModal.value = false
+}
 function openTaskModal() {
   showChoiceModal.value = false
   showTaskModal.value = true
@@ -80,14 +105,22 @@ function toggleSidebar() {
       <div class="profile-name">Max Mustermann</div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="sidebar-nav">
-  <router-link to="/">Startseite</router-link>
-  <router-link to="/kategorien">Kategorien</router-link>
-    </nav>
 
-    <!-- Settings Icon -->
-    <div class="sidebar-settings">⚙️</div>
+<nav class="sidebar-nav">
+  <router-link to="/" class="nav-link">Startseite</router-link>
+  <router-link to="/task" class="nav-link">Aufgaben</router-link>
+  <router-link to="/calendar" class="nav-link">Kalender</router-link>
+  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+  <router-link to="/freetext" class="nav-link">Freitext</router-link>
+</nav>
+
+<router-link
+  to="/settings"
+  class="sidebar-settings"
+  @click="showSidebar = false"
+>
+  ⚙️
+</router-link>
   </div>
 </div>
 
@@ -214,10 +247,16 @@ function toggleSidebar() {
 
     <div class="modal-actions">
       <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-      <button class="create" @click="createText">Erstellen</button>
+      <button class="create" @click="createText">Erstellen</button>  
     </div>
 
   </div>
 </div>
+
+
+
 </template>
 
+<style scoped>
+
+</style>
