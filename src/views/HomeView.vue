@@ -71,15 +71,6 @@ function createTask() {
   showTaskModal.value = false
 }
 
-
-const showCategoryModal = ref(false)
-
-const newCategory = ref({
-  name: "",
-  color: "#8AB3C2"
-})
-
-
 const showTextModal = ref(false)
 const newText = ref({
   content: ""
@@ -89,6 +80,36 @@ const showSidebar = ref(false)
 
 function toggleSidebar() {
   showSidebar.value = !showSidebar.value
+}
+
+const showCategoryModal = ref(false)
+const newCategory = ref({ name: "", color: "#8AB3C2" })
+
+function createCategory() {
+  if (!newCategory.value.name.trim()) return
+
+  const savedCategories = localStorage.getItem("categories")
+  const categories = savedCategories ? JSON.parse(savedCategories) : []
+
+  categories.push({
+    id: Date.now(),
+    name: newCategory.value.name,
+    color: newCategory.value.color
+  })
+
+  localStorage.setItem("categories", JSON.stringify(categories))
+
+  // Modal zurücksetzen
+  newCategory.value = { name: "", color: "#8AB3C2" }
+  showCategoryModal.value = false
+}
+
+// Optional: max. 3 Zeilen Name
+function limitCategoryLines(catRef) {
+  const lines = catRef.value.name.split("\n")
+  if (lines.length > 3) {
+    catRef.value.name = lines.slice(0, 3).join("\n")
+  }
 }
 </script>
 
