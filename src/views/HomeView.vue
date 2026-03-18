@@ -1,11 +1,10 @@
 <script setup>
 import "@/assets/style.css"  
-import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 import "@/assets/laptops.css"
 import "@/assets/phones.css"
-
+import { ref, onMounted } from "vue"
 
 
 
@@ -33,6 +32,28 @@ const newTask = ref({
   task: ""
 })
 
+const freeTexts = ref([])
+
+// 🔹 Local storage beim Mount laden
+onMounted(() => {
+  const savedTexts = localStorage.getItem("freeTexts")
+  if (savedTexts) {
+    freeTexts.value = JSON.parse(savedTexts)
+  }
+})
+function createText() {
+  if (!newText.value.content.trim()) return
+
+  freeTexts.value.push({
+    id: Date.now(),
+    content: newText.value.content
+  })
+
+  localStorage.setItem("freeTexts", JSON.stringify(freeTexts.value))
+
+  newText.value.content = ""
+  showTextModal.value = false
+}
 function openTaskModal() {
   showChoiceModal.value = false
   showTaskModal.value = true
@@ -226,7 +247,7 @@ function toggleSidebar() {
 
     <div class="modal-actions">
       <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-      <button class="create" @click="createText">Erstellen</button>
+      <button class="create" @click="createText">Erstellen</button>  
     </div>
 
   </div>
