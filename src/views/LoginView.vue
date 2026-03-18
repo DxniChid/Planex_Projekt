@@ -35,7 +35,6 @@ export default{
         </form> 
     </div>
     <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
-    <p>Passwort vergessen?</p>
 </template>
 
 <style scoped>
@@ -50,7 +49,6 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
-    /* Add this line */
     align-items: center; 
 }
     h1, p {
