@@ -163,6 +163,7 @@ const filteredItems = computed(() => {
           <router-link to="/task" class="nav-link">Aufgaben</router-link>
           <router-link to="/calendar" class="nav-link">Kalender</router-link>
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+          <router-link to="/freetext" class="nav-link">Freitext</router-link>
         </nav>
 
 <router-link
