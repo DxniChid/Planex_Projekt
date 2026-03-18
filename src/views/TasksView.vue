@@ -311,7 +311,8 @@ button.add {
 
 
 h1 {
-  margin-left: 1000px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .task-area {
