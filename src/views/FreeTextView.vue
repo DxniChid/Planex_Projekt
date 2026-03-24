@@ -2,9 +2,14 @@
 import "@/assets/style.css"
 import "@/assets/laptops.css"
 import "@/assets/phones.css"
-import { ref, onMounted } from "vue"
+import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
+
+const store = usePlanexStore()
+const { freeTexts, user } = storeToRefs(store)
 
 // Sidebar
 const showSidebar = ref(false)
@@ -12,39 +17,24 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-// Freitexte
-const freeTexts = ref([])
-
 // Bearbeiten
 const showEditModal = ref(false)
 const editingText = ref({ id: null, content: "" })
 
-onMounted(() => {
-  const savedTexts = localStorage.getItem("freeTexts")
-  if (savedTexts) {
-    freeTexts.value = JSON.parse(savedTexts)
-  }
-})
-
 // 🔹 Löschen
 function deleteText(id) {
-  freeTexts.value = freeTexts.value.filter(text => text.id !== id)
-  localStorage.setItem("freeTexts", JSON.stringify(freeTexts.value))
+  store.deleteFreeText(id)
 }
 
 // 🔹 Bearbeiten starten
 function startEdit(text) {
-  editingText.value = { ...text } // Kopie, damit v-model funktioniert
+  editingText.value = { ...text }
   showEditModal.value = true
 }
 
 // 🔹 Änderungen speichern
 function editText() {
-  const index = freeTexts.value.findIndex(t => t.id === editingText.value.id)
-  if (index !== -1) {
-    freeTexts.value[index].content = editingText.value.content
-    localStorage.setItem("freeTexts", JSON.stringify(freeTexts.value))
-  }
+  store.updateFreeText(editingText.value.id, editingText.value.content)
   showEditModal.value = false
   editingText.value = { id: null, content: "" }
 }
@@ -64,7 +54,7 @@ function editText() {
           <div class="profile-pic">
             <img :src="profile" alt="Profilbild" />
           </div>
-          <div class="profile-name">Max Mustermann</div>
+          <div class="profile-name">{{ user.name }}</div>
         </div>
 
         <nav class="sidebar-nav">

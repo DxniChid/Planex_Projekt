@@ -1,22 +1,27 @@
-<script>
-export default {
-    methods: {
-        goBack() {
-            this.$router.push("/")
-        },
-        logout() {
-            this.$router.push("/login")
-        },
-    }
+<script setup>
+import profile from "@/assets/profile.jpg"
+import { useRouter } from "vue-router"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
+
+const router = useRouter()
+const store = usePlanexStore()
+const { user } = storeToRefs(store)
+
+function goHome() {
+  router.push("/")
 }
 </script>
 
 <template>
     <div id="wrapper">
 
-        <div id="top">
-            <span id="back" @click="goBack">←</span>
-        </div>
+    <div class="back" @click="goHome">←</div>
+
+    <div class="profile">
+      <img :src="profile" class="profile-img" />
+      <p class="name">{{ user.name }}</p>
+    </div>
 
         <img id="avatar" src="@/assets/profile.jpg" alt="Profilbild">
         <h2>Max Mustermann</h2>
@@ -84,15 +89,27 @@ button {
     cursor: pointer;
 }
 
-#bottom {
-    margin-top: auto;
-    margin-bottom: 30px;
-    display: flex;
-    gap: 50px;
+.autologin {
+  margin-top: 10px;
 }
 
-.link {
-    cursor: pointer;
-    font-size: 18px;
+.autologin-label {
+  width: min(420px, 90%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 40px;
+  font-size: 22px;
 }
 </style>

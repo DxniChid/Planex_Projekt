@@ -1,9 +1,5 @@
-<script >
-
-
-export default{
-    
-
+<script>
+export default {
     data(){
         return {
             prename: null,
@@ -17,20 +13,21 @@ export default{
     methods: {
         checkAcc(prename, email){
             if(true){
+                alert("Registrierung erfolgreich!")
+                this.submit = true
                 this.$router.push("/login")
             }
         }
     }
 }
-
 </script>
 
 <template>
     <img id="logo" src="@/assets/logo.png" alt="">
     <h1>Registrierung</h1>
     <div id="login">
-        <form v-on:submit.prevent="checkAcc(name, email)">
-            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename" required></div>
+        <form v-on:submit.prevent="checkAcc(prename, email)">
+            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename"></div>
             <br>
             <div id="input"><label for="name">Nachname</label> <br><input type="text" name="name" v-model="name"></div>
             <br>
@@ -43,7 +40,7 @@ export default{
             <button type="submit">Registrieren</button>
         </form> 
     </div>
-    <p>Bereits ein Konto? Klicken Sie &nbsp; <RouterLink to="/login"> <u style="cursor: pointer;" >Hier</u></RouterLink></p>
+    <p>Bereits ein Konto? Klicken Sie &nbsp; <RouterLink to="/login"><u style="cursor: pointer;">Hier</u></RouterLink></p>
 </template>
 
 <style scoped>
@@ -58,7 +55,6 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
-    /* Add this line */
     align-items: center; 
 }
     h1, p {
@@ -87,10 +83,10 @@ export default{
         font-size: 30px;
     }
     img {
-        display: block;    /* Required for margin: auto to work */
+        display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 60px;  /* Keeping your existing top margin */
+        margin-top: 60px;
     }
     p {
         font-size: 25px;

@@ -1,77 +1,32 @@
 <script setup>
 import "@/assets/style.css"  
+import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
-import "@/assets/laptops.css"
-import "@/assets/phones.css"
-import { ref, onMounted } from "vue"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
 
-
-
-const name = ref("Max Mustermann")
-
-const todayItems = ref([
-  { time: "06:00", task: "Hund Gassi" },
-  { time: "11:30", task: "Einkaufen" }
-])
-
-function addItem() {
-  todayItems.value.push({
-    time: "00:00",
-    task: "Neue Aufgabe"
-  })
-}
-
-
+const store = usePlanexStore()
+const { tasks, categories, user } = storeToRefs(store)
 
 const showChoiceModal = ref(false)
 const showTaskModal = ref(false)
+const showCategoryModal = ref(false)
+const showTextModal = ref(false)
 
 const newTask = ref({
+  title: "",
+  task: "",
   time: "",
-  task: ""
+  status: "red",
+  category: null
 })
 
-const freeTexts = ref([])
-
-// 🔹 Local storage beim Mount laden
-onMounted(() => {
-  const savedTexts = localStorage.getItem("freeTexts")
-  if (savedTexts) {
-    freeTexts.value = JSON.parse(savedTexts)
-  }
+const newCategory = ref({
+  name: "",
+  color: "#8AB3C2"
 })
-function createText() {
-  if (!newText.value.content.trim()) return
 
-  freeTexts.value.push({
-    id: Date.now(),
-    content: newText.value.content
-  })
-
-  localStorage.setItem("freeTexts", JSON.stringify(freeTexts.value))
-
-  newText.value.content = ""
-  showTextModal.value = false
-}
-function openTaskModal() {
-  showChoiceModal.value = false
-  showTaskModal.value = true
-}
-
-function createTask() {
-  if (!newTask.value.task || !newTask.value.time) return
-
-  todayItems.value.push({
-    time: newTask.value.time,
-    task: newTask.value.task
-  })
-
-  newTask.value = { time: "", task: "" }
-  showTaskModal.value = false
-}
-
-const showTextModal = ref(false)
 const newText = ref({
   content: ""
 })
@@ -82,34 +37,39 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-const showCategoryModal = ref(false)
-const newCategory = ref({ name: "", color: "#8AB3C2" })
+function openTaskModal() {
+  showChoiceModal.value = false
+  showTaskModal.value = true
+}
+
+function createTask() {
+  if (!newTask.value.title || !newTask.value.time) {
+    alert("Bitte Titel und Uhrzeit angeben!")
+    return
+  }
+  store.addTask(newTask.value)
+  newTask.value = { title: "", task: "", time: "", status: "red", category: null }
+  showTaskModal.value = false
+}
 
 function createCategory() {
-  if (!newCategory.value.name.trim()) return
-
-  const savedCategories = localStorage.getItem("categories")
-  const categories = savedCategories ? JSON.parse(savedCategories) : []
-
-  categories.push({
-    id: Date.now(),
-    name: newCategory.value.name,
-    color: newCategory.value.color
-  })
-
-  localStorage.setItem("categories", JSON.stringify(categories))
-
-  // Modal zurücksetzen
+  if (!newCategory.value.name) {
+    alert("Bitte einen Namen eingeben!")
+    return
+  }
+  store.addCategory(newCategory.value.name, newCategory.value.color)
   newCategory.value = { name: "", color: "#8AB3C2" }
   showCategoryModal.value = false
 }
 
-// Optional: max. 3 Zeilen Name
-function limitCategoryLines(catRef) {
-  const lines = catRef.value.name.split("\n")
-  if (lines.length > 3) {
-    catRef.value.name = lines.slice(0, 3).join("\n")
+function createText() {
+  if (!newText.value.content.trim()) {
+    alert("Bitte Text eingeben!")
+    return
   }
+  store.addFreeText(newText.value.content)
+  newText.value = { content: "" }
+  showTextModal.value = false
 }
 </script>
 
@@ -117,41 +77,38 @@ function limitCategoryLines(catRef) {
   <header class="header">
     <div class="settings" @click="toggleSidebar">☰</div>
     <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
-  <div class="sidebar">
+      <div class="sidebar">
+        <div class="sidebar-profile">
+          <div class="profile-pic">
+            <img :src="profile" alt="Profilbild" />
+          </div>
+          <div class="profile-name">{{ user.name }}</div>
+        </div>
 
-    <div class="sidebar-profile">
-      <div class="profile-pic">
-        <img :src="profile" alt="Profilbild" />
+        <nav class="sidebar-nav">
+          <router-link to="/" class="nav-link">Startseite</router-link>
+          <router-link to="/task" class="nav-link">Aufgaben</router-link>
+          <router-link to="/calendar" class="nav-link">Kalender</router-link>
+          <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+          <router-link to="/freetext" class="nav-link">Freitext</router-link>
+        </nav>
+
+        <router-link
+          to="/settings"
+          class="sidebar-settings"
+          @click="showSidebar = false"
+        >
+          ⚙️
+        </router-link>
       </div>
-      <div class="profile-name">Max Mustermann</div>
     </div>
-
-
-<nav class="sidebar-nav">
-  <router-link to="/" class="nav-link">Startseite</router-link>
-  <router-link to="/task" class="nav-link">Aufgaben</router-link>
-  <router-link to="/calendar" class="nav-link">Kalender</router-link>
-  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
-  <router-link to="/freetext" class="nav-link">Freitext</router-link>
-</nav>
-
-<router-link
-  to="/settings"
-  class="sidebar-settings"
-  @click="showSidebar = false"
->
-  ⚙️
-</router-link>
-  </div>
-</div>
-
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
 
   <div class="welcome">
     <h1>Willkommen</h1>
-    <h2>{{ name }}</h2>
+    <h2>{{ user.name }}</h2>
   </div>
 
   <div class="card">
@@ -159,123 +116,115 @@ function limitCategoryLines(catRef) {
 
     <div class="timeline">
       <div
-        v-for="(item, i) in todayItems"
+        v-for="(item, i) in tasks"
         :key="i"
         class="timeline-row"
       >
         <div class="timeline-left">
           <div class="dot"></div>
-          <div v-if="i !== todayItems.length - 1" class="line"></div>
+          <div v-if="i !== tasks.length - 1" class="line"></div>
         </div>
 
         <div class="time">{{ item.time }}</div>
-        <div class="task">{{ item.task }}</div>
+        <div class="task">{{ item.title }}</div>
       </div>
     </div>
-
-
   </div>
-<button class="add" @click="showChoiceModal = true">+</button>    
-<div v-if="showChoiceModal" class="choice-overlay">
-  <div class="choice-box">
-    <button @click="openTaskModal">Aufgabe</button>
-    <button @click="showTextModal = true; showChoiceModal = false">Freitext</button>
-    <button @click="showCategoryModal = true; showChoiceModal = false">Kategorie</button> 
-   </div>
-</div>
 
-    <!-- Task Modal -->
-<div v-if="showTaskModal" class="modal-overlay">
-  <div class="modal">
+  <button class="add" @click="showChoiceModal = true">+</button>    
 
-    <input
-    type="text"
-    v-model="newTask.title"
-    placeholder="Titel der Aufgabe"
-    class="input"
-  />
-
-    <input
-      type="text"
-      v-model="newTask.task"
-      placeholder="Hier eingeben (max. 100 Zeichen)"
-      maxlength="100"
-      class="input"
-    />
-
-    <input
-      type="time"
-      v-model="newTask.time"
-      class="input"
-    />
-
-    <div class="modal-actions">
-      <button class="cancel" @click="showTaskModal = false">
-        Abbrechen
-      </button>
-
-      <button class="create" @click="createTask">
-        Erstellen
-      </button>
+  <div v-if="showChoiceModal" class="choice-overlay" @click.self="showChoiceModal = false">
+    <div class="choice-box">
+      <button @click="openTaskModal">Aufgabe</button>
+      <button @click="showTextModal = true; showChoiceModal = false">Freitext</button>
+      <button @click="showCategoryModal = true; showChoiceModal = false">Kategorie</button> 
     </div>
-
   </div>
-</div>
 
+  <!-- Task Modal -->
+  <div v-if="showTaskModal" class="modal-overlay" @click.self="showTaskModal = false">
+    <div class="modal">
+      <h3>Neue Aufgabe</h3>
+      <input
+        type="text"
+        v-model="newTask.title"
+        placeholder="Titel der Aufgabe"
+        class="input"
+      />
 
-<div v-if="showCategoryModal" class="modal-overlay">
-  <div class="modal">
+      <input
+        type="text"
+        v-model="newTask.task"
+        placeholder="Beschreibung (max. 100 Zeichen)"
+        maxlength="100"
+        class="input"
+      />
 
-    <h2>Kategorie erstellen</h2>
+      <input
+        type="time"
+        v-model="newTask.time"
+        class="input"
+      />
 
-    <input
-      type="text"
-      v-model="newCategory.name"
-      placeholder="Name (max. 30 Zeichen)"
-      maxlength="50"
-      class="input"
-    />
+      <select v-model.number="newTask.category" class="input">
+        <option :value="null">Keine Kategorie</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+      </select>
 
-
-    <label>Farbe wählen:</label>
-    <input
-      type="color"
-      v-model="newCategory.color"
-      class="input"
-      style="height: 50px; width: 100%; padding: 0; border-radius: 8px;"
-    />
-
-    <div class="modal-actions">
-      <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
-      <button class="create" @click="createCategory">Erstellen</button>
+      <div class="modal-actions">
+        <button class="cancel" @click="showTaskModal = false">Abbrechen</button>
+        <button class="create" @click="createTask">Erstellen</button>
+      </div>
     </div>
-
   </div>
-</div>
 
-<div v-if="showTextModal" class="modal-overlay">
-  <div class="modal">
+  <!-- Category Modal -->
+  <div v-if="showCategoryModal" class="modal-overlay" @click.self="showCategoryModal = false">
+    <div class="modal">
+      <h2>Kategorie erstellen</h2>
 
-    <h2>Freitext</h2>
+      <input
+        type="text"
+        v-model="newCategory.name"
+        placeholder="Name (max. 50 Zeichen)"
+        maxlength="50"
+        class="input"
+      />
 
-    <textarea
-      v-model="newText.content"
-      placeholder=""
-      class="input"
-      rows="5"
-      style="resize: none;"
-    ></textarea>
+      <label>Farbe wählen:</label>
+      <input
+        type="color"
+        v-model="newCategory.color"
+        class="input"
+        style="height: 50px; width: 100%; padding: 0; border-radius: 8px;"
+      />
 
-    <div class="modal-actions">
-      <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-      <button class="create" @click="createText">Erstellen</button>  
+      <div class="modal-actions">
+        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Erstellen</button>
+      </div>
     </div>
-
   </div>
-</div>
 
+  <!-- Free Text Modal -->
+  <div v-if="showTextModal" class="modal-overlay" @click.self="showTextModal = false">
+    <div class="modal">
+      <h2>Freitext</h2>
 
+      <textarea
+        v-model="newText.content"
+        placeholder="Text eingeben..."
+        class="input"
+        rows="5"
+        style="resize: none;"
+      ></textarea>
 
+      <div class="modal-actions">
+        <button class="cancel" @click="showTextModal = false">Abbrechen</button>
+        <button class="create" @click="createText">Erstellen</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
