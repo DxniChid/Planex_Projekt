@@ -1,8 +1,12 @@
 <script setup>
 import profile from "@/assets/profile.jpg"
 import { useRouter } from "vue-router"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
 
 const router = useRouter()
+const store = usePlanexStore()
+const { user } = storeToRefs(store)
 
 function goHome() {
   router.push("/")
@@ -16,7 +20,7 @@ function goHome() {
 
     <div class="profile">
       <img :src="profile" class="profile-img" />
-      <p class="name">Max Mustermann</p>
+      <p class="name">{{ user.name }}</p>
     </div>
 
     <div class="menu">
@@ -92,6 +96,7 @@ function goHome() {
 .autologin {
   margin-top: 10px;
 }
+
 .autologin-label {
   width: min(420px, 90%);
   display: flex;
@@ -101,6 +106,7 @@ function goHome() {
   font-size: 20px;
   white-space: nowrap;
 }
+
 .bottom {
   position: fixed;
   bottom: 20px;

@@ -1,9 +1,5 @@
-<script >
-
-
-export default{
-    
-
+<script>
+export default {
     data(){
         return {
             email: null,
@@ -12,31 +8,29 @@ export default{
         }
     },
     methods: {
-        checkAcc(name, email){
+        checkAcc(email){
             if(true){
-                alert("Hello " + name + "your email: " + email)
+                alert("Login erfolgreich!")
                 this.submit = true
                 this.$router.push("/")
-                
             }
         }
     }
 }
-
 </script>
 
 <template>
     <img id="logo" src="@/assets/logo.png" alt="">
     <h1>Anmeldung</h1>
     <div id="login">
-        <form v-on:submit.prevent="checkAcc(name, email)">
+        <form v-on:submit.prevent="checkAcc(email)">
             <div id="input"><label for="name">Email</label> <br><input type="text" name="name" v-model="email"></div>
             <br>
             <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password"></div>
             <button type="submit">Anmelden</button>
         </form> 
     </div>
-    <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
+    <p>Kein Konto? &nbsp; <RouterLink to="/register"><u style="cursor: pointer;">Hier</u></RouterLink>&nbsp; registrieren!</p>
     <p>Passwort vergessen?</p>
 </template>
 
@@ -52,7 +46,6 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
-    /* Add this line */
     align-items: center; 
 }
     h1, p {
@@ -81,10 +74,10 @@ export default{
         font-size: 30px;
     }
     img {
-        display: block;    /* Required for margin: auto to work */
+        display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 60px;  /* Keeping your existing top margin */
+        margin-top: 60px;
     }
     p {
         font-size: 25px;

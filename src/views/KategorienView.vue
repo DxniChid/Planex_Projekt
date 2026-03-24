@@ -3,6 +3,11 @@ import "@/assets/style.css"
 import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
+
+const store = usePlanexStore()
+const { categories, user } = storeToRefs(store)
 
 const showSidebar = ref(false)
 
@@ -10,14 +15,8 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-const categories = ref([
-  { id: 1, name: "Arbeit" },
-  { id: 2, name: "Privat" },
-  { id: 3, name: "Sport" }
-])
-
 function deleteCategory(id) {
-  categories.value = categories.value.filter(k => k.id !== id)
+  store.deleteCategory(id)
 }
 </script>
 
@@ -25,32 +24,30 @@ function deleteCategory(id) {
   <header class="header">
     <div class="settings" @click="toggleSidebar">☰</div>
     <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
-  <div class="sidebar">
+      <div class="sidebar">
+        <div class="sidebar-profile">
+          <div class="profile-pic">
+            <img :src="profile" alt="Profilbild" />
+          </div>
+          <div class="profile-name">{{ user.name }}</div>
+        </div>
 
-    <div class="sidebar-profile">
-      <div class="profile-pic">
-        <img :src="profile" alt="Profilbild" />
+        <nav class="sidebar-nav">
+          <router-link to="/" class="nav-link">Startseite</router-link>
+          <router-link to="/task" class="nav-link">Aufgaben</router-link>
+          <router-link to="/calendar" class="nav-link">Kalender</router-link>
+          <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
+          <router-link to="/freetext" class="nav-link">Freitext</router-link>
+        </nav>
+        <router-link
+          to="/settings"
+          class="sidebar-settings"
+          @click="showSidebar = false"
+        >
+          ⚙️
+        </router-link>
       </div>
-      <div class="profile-name">Max Mustermann</div>
     </div>
-
-<nav class="sidebar-nav">
-  <router-link to="/" class="nav-link">Startseite</router-link>
-  <router-link to="/task" class="nav-link">Aufgaben</router-link>
-  <router-link to="/calendar" class="nav-link">Kalender</router-link>
-  <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
-  <router-link to="/freetext" class="nav-link">Freitext</router-link>
-</nav>
-<router-link
-  to="/settings"
-  class="sidebar-settings"
-  @click="showSidebar = false"
->
-  ⚙️
-</router-link>
-  </div>
-</div>
-
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
@@ -60,30 +57,30 @@ function deleteCategory(id) {
   </div>
 
   <div class="card">
-      <div 
-    v-for="category in categories" 
-    :key="category.id" 
-    class="category-item"
-  >
-    <span class="category-name">
-      {{ category.name }}
-    </span>
-
-    <button 
-      class="delete-btn"
-      @click="deleteCategory(category.id)"
+    <div 
+      v-for="category in categories" 
+      :key="category.id" 
+      class="category-item"
     >
-      ✖
-    </button>
-  </div>
+      <span class="category-name">
+        {{ category.name }}
+      </span>
 
+      <button 
+        class="delete-btn"
+        @click="deleteCategory(category.id)"
+      >
+        ✖
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-  h1 {
-    font-size: 40px;
-  }
+h1 {
+  font-size: 40px;
+}
+
 .card {
   height: 300px;
 }
@@ -110,4 +107,3 @@ function deleteCategory(id) {
   cursor: pointer;
 }
 </style>
-

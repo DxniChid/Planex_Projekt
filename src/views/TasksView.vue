@@ -1,12 +1,21 @@
 <script setup>
 import "@/assets/style.css"
 import { ref, computed } from "vue"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
+
+// Initialize Store
+const store = usePlanexStore()
+// Extract reactive data from store - use "tasks" not "todayItems"
+const { tasks, categories, user } = storeToRefs(store)
 
 const showChoiceModal = ref(false)
 const showTaskModal = ref(false)
 const showCategoryModal = ref(false)
+const showTextModal = ref(false)
+const editingTaskId = ref(null)
 
 const newTask = ref({
   title: "",
@@ -16,110 +25,74 @@ const newTask = ref({
   category: null
 })
 
-const newCategory = ref({
-  name: ""
-})
+const newCategory = ref({ name: "", color: "#8AB3C2" })
+const newText = ref({ content: "" })
 
-let nextCategoryId = 4
+// --- Logic Updates ---
 
-function toggleTaskStatus(item) {
-  item.status = item.status === "red" ? "green" : "red"
-}
-
-function openTaskModal(item = null, index = null) {
+function openTaskModal(item = null, id = null) {
   showChoiceModal.value = false
   showTaskModal.value = true
 
   if (item) {
     newTask.value = { ...item }
-    editingTaskIndex.value = index
+    editingTaskId.value = id
   } else {
     newTask.value = { title: "", task: "", time: "", status: "red", category: null }
-    editingTaskIndex.value = null
+    editingTaskId.value = null
   }
 }
 
 function createTask() {
   if (!newTask.value.title || !newTask.value.time) {
-    alert("Bitte Titel und Uhrzeit angeben!");
+    alert("Bitte Titel und Uhrzeit angeben!")
     return
   }
 
-  if (editingTaskIndex.value !== null) {
-    todayItems.value[editingTaskIndex.value] = { ...newTask.value }
+  // Use store actions with ID not index
+  if (editingTaskId.value !== null) {
+    store.updateTask(editingTaskId.value, newTask.value)
   } else {
-    todayItems.value.push({ ...newTask.value })
+    store.addTask(newTask.value)
   }
 
   newTask.value = { title: "", task: "", time: "", status: "red", category: null }
   showTaskModal.value = false
-  editingTaskIndex.value = null
-}
-
-const texts = ref([])
-const showTextModal = ref(false)
-const newText = ref({
-  content: ""
-})
-
-function createText() {
-  if (!newText.value.content) return
-  texts.value.push({ ...newText.value })
-  newText.value = { content: "" }
-  showTextModal.value = false
-}
-
-function deleteTask(index) {
-  todayItems.value.splice(index, 1)
+  editingTaskId.value = null
 }
 
 function createCategory() {
   if (!newCategory.value.name) return
-
-  categories.value.push({
-    id: nextCategoryId++,
-    name: newCategory.value.name
-  })
-
-  newCategory.value = { name: "" }
+  store.addCategory(newCategory.value.name, newCategory.value.color)
+  newCategory.value = { name: "", color: "#8AB3C2" }
   showCategoryModal.value = false
 }
 
-const showSidebar = ref(false)
-function toggleSidebar() {
-  showSidebar.value = !showSidebar.value
+function createText() {
+  if (!newText.value.content) return
+  store.addFreeText(newText.value.content)
+  newText.value = { content: "" }
+  showTextModal.value = false
 }
 
-const categories = ref([
-  { id: 1, name: "Arbeit" },
-  { id: 2, name: "Freizeit" },
-  { id: 3, name: "Schule" }
-])
-
-const todayItems = ref([
-  { title: "Yoga", time: "07:10", status: "red", category: null },
-  { title: "Restaurant", time: "19:00", status: "green", category: 2 }
-])
-
-const editingTaskIndex = ref(null)
+// --- Search & Filter ---
 const searchQuery = ref("")
 const showSearch = ref(false)
-
-function toggleSearch() {
-  showSearch.value = !showSearch.value
-  searchQuery.value = ""
-}
-
 const showFilterMenu = ref(false)
 const showCategorySubmenu = ref(false)
 const selectedStatus = ref(null)
 const selectedCategory = ref(null)
 const statuses = ["Alle", "Offen", "Erledigt", "Kategorie"]
 
-function toggleFilterMenu() {
-  showFilterMenu.value = !showFilterMenu.value
-  showCategorySubmenu.value = false
-}
+const filteredItems = computed(() => {
+  // Use tasks.value for filtering
+  return tasks.value.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesStatus = !selectedStatus.value || item.status === selectedStatus.value
+    const matchesCategory = !selectedCategory.value || item.category === selectedCategory.value
+    return matchesSearch && matchesStatus && matchesCategory
+  })
+})
 
 function selectStatus(status) {
   if (status === "Kategorie") {
@@ -128,47 +101,26 @@ function selectStatus(status) {
     selectedStatus.value = null
     selectedCategory.value = null
     showFilterMenu.value = false
-    showCategorySubmenu.value = false
   } else {
     selectedStatus.value = status === "Erledigt" ? "green" : "red"
     selectedCategory.value = null
     showFilterMenu.value = false
-    showCategorySubmenu.value = false
   }
 }
 
-function selectCategory(categoryId) {
-  selectedCategory.value = categoryId
-  showFilterMenu.value = false
-  showCategorySubmenu.value = false
-}
-
-function getCategoryName(categoryId) {
-  if (!categoryId) return null
-  const cat = categories.value.find(c => c.id === categoryId)
-  return cat ? cat.name : null
-}
-
-const filteredItems = computed(() => {
-  return todayItems.value.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesStatus = !selectedStatus.value || item.status === selectedStatus.value
-    const matchesCategory = !selectedCategory.value || item.category === selectedCategory.value
-    return matchesSearch && matchesStatus && matchesCategory
-  })
-})
+const showSidebar = ref(false)
 </script>
 
 <template>
   <header class="header">
-    <div class="settings" @click="toggleSidebar">☰</div>
+    <div class="settings" @click="showSidebar = !showSidebar">☰</div>
     <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
       <div class="sidebar">
         <div class="sidebar-profile">
           <div class="profile-pic">
             <img :src="profile" alt="Profilbild" />
           </div>
-          <div class="profile-name">Max Mustermann</div>
+          <div class="profile-name">{{ user.name }}</div>
         </div>
         <nav class="sidebar-nav">
           <router-link to="/" class="nav-link">Startseite</router-link>
@@ -177,7 +129,6 @@ const filteredItems = computed(() => {
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
           <router-link to="/freetext" class="nav-link">Freitext</router-link>
         </nav>
-        <router-link to="/settings" class="sidebar-settings" @click="showSidebar = false">⚙️</router-link>
       </div>
     </div>
     <img :src="logo" alt="Planex Logo" class="logo-img" />
@@ -187,30 +138,30 @@ const filteredItems = computed(() => {
   
   <div class="task-area">
     <div class="search-container">
-      <input v-if="showSearch" type="text" v-model="searchQuery" placeholder="Aufgaben suchen..." class="search-input" />
-      <div @click="toggleSearch" style="cursor: pointer;">🔍</div>
+      <input v-if="showSearch" type="text" v-model="searchQuery" placeholder="Suchen..." class="search-input" />
+      <div @click="showSearch = !showSearch" style="cursor: pointer;">🔍</div>
     </div>
 
     <div class="task-list">
-      <div v-for="(item, index) in filteredItems" :key="index" class="task-box">
+      <div v-for="item in filteredItems" :key="item.id" class="task-box">
         <span class="task-name">{{ item.title }}</span>
         
-        <span v-if="item.category" class="task-category">{{ getCategoryName(item.category) }}</span>
+        <span v-if="item.category" class="task-category">{{ store.getCategoryById(item.category)?.name }}</span>
         <span class="task-time">{{ item.time }}</span>
         
-        <span class="status" :class="item.status" @click="toggleTaskStatus(item)" style="cursor: pointer;"></span>
-        <span class="edit" @click="openTaskModal(item, todayItems.indexOf(item))">✏️</span>
-        <span class="icon-btn delete-btn" @click="deleteTask(todayItems.indexOf(item))">🗑️</span>
+        <span class="status" :class="item.status" @click="store.toggleTaskStatus(item.id)" style="cursor: pointer;"></span>
+        <span class="edit" @click="openTaskModal(item, item.id)">✏️</span>
+        <span class="icon-btn delete-btn" @click="store.deleteTask(item.id)">🗑️</span>
       </div>
     </div>
 
     <div class="filter" style="position: relative;">
-      <button @click="toggleFilterMenu">Filter ▼</button>
+      <button @click="showFilterMenu = !showFilterMenu">Filter ▼</button>
       <div v-if="showFilterMenu" class="filter-menu">
         <div v-for="status in statuses" :key="status" class="filter-item" @click="selectStatus(status)">
           {{ status }}
           <div v-if="status === 'Kategorie' && showCategorySubmenu" class="filter-submenu">
-            <div v-for="cat in categories" :key="cat.id" class="filter-item" @click.stop="selectCategory(cat.id)">
+            <div v-for="cat in categories" :key="cat.id" class="filter-item" @click.stop="selectedCategory = cat.id; showFilterMenu = false">
               {{ cat.name }}
             </div>
           </div>
@@ -231,17 +182,14 @@ const filteredItems = computed(() => {
 
   <div v-if="showTaskModal" class="modal-overlay" @click.self="showTaskModal = false">
     <div class="modal">
-      <h3>{{ editingTaskIndex !== null ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}</h3>
+      <h3>{{ editingTaskId !== null ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}</h3>
       <input type="text" v-model="newTask.title" placeholder="Titel" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
-      <input type="text" v-model="newTask.task" placeholder="Beschreibung" maxlength="100" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
       <input type="time" v-model="newTask.time" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
-      <div style="margin: 15px 0;">
-        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Kategorie:</label>
-        <select v-model.number="newTask.category" class="category-select" style="width: 100%; padding: 8px;">
-          <option :value="null">Keine Kategorie</option>
-          <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-        </select>
-      </div>
+      <textarea v-model="newTask.task" placeholder="Aufgabenbeschreibung" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box; height: 80px;"></textarea>
+      <select v-model.number="newTask.category" class="category-select" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <option :value="null">Keine Kategorie</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+      </select>
       <div class="modal-actions">
         <button class="cancel" @click="showTaskModal = false">Abbrechen</button>
         <button class="create" @click="createTask">Speichern</button>
@@ -249,24 +197,25 @@ const filteredItems = computed(() => {
     </div>
   </div>
 
-  <div v-if="showTextModal" class="modal-overlay" @click.self="showTextModal = false">
+  <div v-if="showCategoryModal" class="modal-overlay" @click.self="showCategoryModal = false">
     <div class="modal">
-      <h3>Freitext</h3>
-      <textarea v-model="newText.content" class="input" rows="5" style="width: 100%; resize: none; box-sizing: border-box;"></textarea>
+      <h3>Kategorie erstellen</h3>
+      <input type="text" v-model="newCategory.name" placeholder="Name" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;" />
+      <input type="color" v-model="newCategory.color" class="input" style="width: 100%; height: 40px; margin-bottom: 10px; box-sizing: border-box;" />
       <div class="modal-actions">
-        <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-        <button class="create" @click="createText">Speichern</button>
+        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Erstellen</button>
       </div>
     </div>
   </div>
 
-  <div v-if="showCategoryModal" class="modal-overlay" @click.self="showCategoryModal = false">
+  <div v-if="showTextModal" class="modal-overlay" @click.self="showTextModal = false">
     <div class="modal">
-      <h3>Kategorie erstellen</h3>
-      <input type="text" v-model="newCategory.name" placeholder="Kategoriename" maxlength="30" class="input" style="width: 100%; box-sizing: border-box;" />
+      <h3>Freitext hinzufügen</h3>
+      <textarea v-model="newText.content" placeholder="Text..." class="input" style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
       <div class="modal-actions">
-        <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
-        <button class="create" @click="createCategory">Erstellen</button>
+        <button class="cancel" @click="showTextModal = false">Abbrechen</button>
+        <button class="create" @click="createText">Speichern</button>
       </div>
     </div>
   </div>
@@ -441,6 +390,13 @@ h1 {
 .input {
   padding: 8px;
   font-size: 14px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea.input {
+  font-family: inherit;
+  resize: vertical;
 }
 
 .modal-actions {
@@ -487,5 +443,29 @@ h1 {
   align-items: center;
   justify-content: center;
   z-index: 100;
+}
+
+.choice-box {
+  background: #d5e8f2;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 250px;
+}
+
+.choice-box button {
+  padding: 12px;
+  background: #8AB3C2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.choice-box button:hover {
+  background: #6a94a8;
 }
 </style>

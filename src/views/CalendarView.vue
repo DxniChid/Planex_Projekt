@@ -4,6 +4,11 @@ import "@/assets/style.css"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 import { useRouter } from "vue-router"
+import { usePlanexStore } from "@/stores/planexStore"
+import { storeToRefs } from "pinia"
+
+const store = usePlanexStore()
+const { user } = storeToRefs(store)
 
 const router = useRouter();
 
@@ -70,7 +75,6 @@ function selectDay(day) {
   selectedDay.value = day
 }
 
-
 function goToTask() {
   router.push("/task")  
 }
@@ -87,7 +91,7 @@ function goToTask() {
       <div class="profile-pic">
         <img :src="profile" alt="Profilbild" />
       </div>
-      <div class="profile-name">Max Mustermann</div>
+      <div class="profile-name">{{ user.name }}</div>
     </div>
 
 <nav class="sidebar-nav">
@@ -107,7 +111,6 @@ function goToTask() {
 </router-link>  
   </div>
 </div>
-
 
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
@@ -197,7 +200,6 @@ function goToTask() {
   position: relative;
   text-align: center;
 }
-
 
 .day:hover {
   background: #eee;
