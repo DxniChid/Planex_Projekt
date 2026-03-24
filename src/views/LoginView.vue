@@ -35,7 +35,11 @@ export default{
             <button type="submit">Anmelden</button>
         </form> 
     </div>
-    <p>Kein Konto? &nbsp; <u>Hier</u>&nbsp; registrieren!</p>
+<p>
+  Kein Konto? 
+  <u @click="goToSignup" style="cursor: pointer;">Hier</u>
+  registrieren!
+</p>
 </template>
 
 <style scoped>
@@ -53,9 +57,10 @@ export default{
     align-items: center; 
 }
     h1, p {
-        display: flex;
+        text-align: center;
         justify-content: center;
         font-family: Fredoka;
+        font-size: 25px;
     }
     h1 {
         font-size: 60px;
@@ -83,9 +88,7 @@ export default{
         margin-right: auto;
         margin-top: 60px;  
     }
-    p {
-        font-size: 25px;
-    }
+ 
 
     @media (min-width: 1024px) {
 
