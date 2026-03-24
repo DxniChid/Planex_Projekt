@@ -17,6 +17,9 @@ export default{
                 this.$router.push("/")
                 
             }
+        },
+        goToSignup() {
+            this.$router.push("/signup")  
         }
     }
 }
