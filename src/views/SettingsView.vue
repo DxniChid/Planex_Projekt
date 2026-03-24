@@ -1,113 +1,98 @@
-<script setup>
-import profile from "@/assets/profile.jpg"
-import { useRouter } from "vue-router"
-
-const router = useRouter()
-
-function goHome() {
-  router.push("/")
+<script>
+export default {
+    methods: {
+        goBack() {
+            this.$router.push("/")
+        },
+        logout() {
+            this.$router.push("/login")
+        },
+    }
 }
 </script>
 
 <template>
-  <div class="settings">
+    <div id="wrapper">
 
-    <div class="back" @click="goHome">←</div>
+        <div id="top">
+            <span id="back" @click="goBack">←</span>
+        </div>
 
-    <div class="profile">
-      <img :src="profile" class="profile-img" />
-      <p class="name">Max Mustermann</p>
+        <img id="avatar" src="@/assets/profile.jpg" alt="Profilbild">
+        <h2>Max Mustermann</h2>
+
+        <div id="menu">
+            <button>Sprachen</button>
+            <button>Design</button>
+            <button>Geräte</button>
+        </div>
+
+        <div id="bottom">
+            <p class="link" @click="logout">Abmelden</p>
+            <p class="link" @click="goSupport">Support</p>
+        </div>
+
     </div>
-
-    <div class="menu">
-      <button>Sprachen</button>
-      <button>Design</button>
-      <button>Geräte</button>
-
-      <div class="autologin">
-        <label class="autologin-label">
-          <span>Automatisch einloggen</span>
-          <input type="checkbox" />
-        </label>
-      </div>
-    </div>
-
-    <div class="bottom">
-      <span>Ausloggen</span>
-      <span>Support</span>
-    </div>
-
-  </div>
 </template>
 
 <style scoped>
-.settings {
-  padding: 20px;
-  color: black;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.back {
-  font-size: 32px;
-  cursor: pointer;
-  margin-bottom: 20px;
+#top {
+    width: 100%;
+    padding: 20px;
+    margin-left: 80px;
 }
 
-.profile {
-  text-align: center;
+#back {
+    font-size: 30px;
+    cursor: pointer;
 }
 
-.profile-img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: #ccc;
+#avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 20px;
 }
 
-.name {
-  margin-top: 10px;
-  font-size:32px;
+h1 {
+    margin: 20px 0 30px 0;
+    font-size: 40px;
 }
 
-.menu {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-items: center;
+#menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
 }
 
-.menu button {
-  width: min(320px, 80%);
-  padding: 12px;
-  background: #d9dde3;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+button {
+    width: 260px;
+    height: 55px;
+    border-radius: 12px;
+    border: none;
+    background: #bfc3c9;
+    font-size: 18px;
+    cursor: pointer;
 }
 
-.autologin {
-  margin-top: 10px;
+#bottom {
+    margin-top: auto;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 50px;
 }
-.autologin-label {
-  width: min(420px, 90%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  white-space: nowrap;
-}
-.bottom {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 40px;
-  font-size: 22px;
+
+.link {
+    cursor: pointer;
+    font-size: 18px;
 }
 </style>
