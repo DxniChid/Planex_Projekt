@@ -90,11 +90,6 @@ function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-const categories = ref([
-  { id: 1, name: "Arbeit" },
-  { id: 2, name: "Freizeit" },
-  { id: 3, name: "Schule" }
-])
 
 const todayItems = ref([
   { title: "Yoga", time: "07:10", status: "red", category: null },
