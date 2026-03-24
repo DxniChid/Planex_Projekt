@@ -1,6 +1,4 @@
 <script >
-
-
 export default{
     
 
@@ -80,13 +78,106 @@ export default{
         font-size: 30px;
     }
     img {
-        display: block;    /* Required for margin: auto to work */
+        display: block;    
         margin-left: auto;
         margin-right: auto;
-        margin-top: 60px;  /* Keeping your existing top margin */
+        margin-top: 60px;  
     }
     p {
         font-size: 25px;
     }
+
+    @media (min-width: 1024px) {
+
+    :host, body, .container {
+        height: 100vh;
+    }
+
+    img {
+        width: 220px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 38px;
+        margin-top: 50px;
+    }
+
+    input {
+        width: 300px;
+        height: 18px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+
+    button {
+        margin-top: 40px;
+        width: 170px;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    p {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    #input {
+        margin: 15px;
+    }
+
+    form {
+        gap: 5px;
+    }
+}
+@media (max-width: 600px) {
+    
+    :host, body, .container {
+        height: 100vh;
+    }
+
+    img {
+        width: 220px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 38px;
+        margin-top: 50px;
+    }
+
+    input {
+        width: 300px;
+        height: 18px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+
+    button {
+        margin-top: 40px;
+        width: 170px;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    p {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    #input {
+        margin: 15px;
+    }
+
+    form {
+        gap: 5px;
+    }
+}
     
 </style>
