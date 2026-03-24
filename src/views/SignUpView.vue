@@ -58,7 +58,6 @@ export default{
     flex-direction: column;
     gap: 5px;
     padding: 20px;
-    /* Add this line */
     align-items: center; 
 }
     h1, p {
