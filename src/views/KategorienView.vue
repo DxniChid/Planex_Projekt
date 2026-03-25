@@ -29,8 +29,14 @@ const newCategory = ref({ name: "", color: "#8AB3C2" })
 // --- Actions using Store ---
 
 function handleDelete(id) {
+  const hasTasks = store.tasks.some(task => task.category === id);
+
+  if (hasTasks) {
+    alert("Diese Kategorie kann nicht gelöscht werden, da Aufgaben darin existieren.");
+    return; 
+  }
   if (confirm("Möchtest du diese Kategorie wirklich löschen?")) {
-    store.deleteCategory(id)
+    store.deleteCategory(id);
   }
 }
 
