@@ -206,4 +206,10 @@ function handleCreate() {
   font-weight: bold;
 }
 
+@media (max-width: 700px){
+
+  .note-card {
+    width: 370px;
+  }
+}
 </style>
