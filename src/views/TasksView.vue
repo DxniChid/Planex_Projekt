@@ -332,8 +332,7 @@ h1 {
   left: 0;
   background: #c8d9e2;
   border: 2px solid black;
-  width: 67px;
-  z-index: 10;
+  width: 76px;
 }
 
 .filter-item {
