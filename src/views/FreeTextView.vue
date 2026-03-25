@@ -93,11 +93,11 @@ function editText() {
       >
         <p>{{ text.content }}</p>
 
-        <button class="delete-btn" @click="deleteText(text.id)">
-          Löschen
-        </button>
         <button class="edit-btn" @click="startEdit(text)">
           Bearbeiten
+        </button>
+        <button class="delete-btn" @click="deleteText(text.id)">
+          Löschen
         </button>
       </div>
     </div>
