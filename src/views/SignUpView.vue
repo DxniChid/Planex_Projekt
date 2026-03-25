@@ -40,7 +40,7 @@ export default {
             <button type="submit">Registrieren</button>
         </form> 
     </div>
-    <p>Bereits ein Konto? Klicken Sie &nbsp; <RouterLink to="/login"><u style="cursor: pointer;">Hier</u></RouterLink></p>
+    <p>Bereits ein Konto? Klicken Sie &nbsp; <RouterLink to="/login"> <u style="cursor: pointer;" >hier</u></RouterLink></p>
 </template>
 
 <style scoped>
@@ -83,13 +83,106 @@ export default {
         font-size: 30px;
     }
     img {
-        display: block;
+        display: block;    
         margin-left: auto;
         margin-right: auto;
-        margin-top: 60px;
+        margin-top: 60px;  
     }
     p {
         font-size: 25px;
     }
     
+
+    @media (min-width: 1024px) {
+
+    :host, body, .container {
+        height: 100vh;
+    }
+
+    img {
+        width: 220px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 38px;
+        margin-top: 50px;
+    }
+
+    input {
+        width: 300px;
+        height: 18px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+
+    button {
+        margin-top: 40px;
+        width: 170px;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    p {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    #input {
+        margin: 15px;
+    }
+
+    form {
+        gap: 5px;
+    }
+}
+@media (max-width: 600px) {
+    
+    :host, body, .container {
+        height: 100vh;
+    }
+
+    img {
+        width: 220px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 38px;
+        margin-top: 50px;
+    }
+
+    input {
+        width: 300px;
+        height: 18px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+
+    button {
+        margin-top: 40px;
+        width: 170px;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    p {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    #input {
+        margin: 15px;
+    }
+
+    form {
+        gap: 5px;
+    }
+}
 </style>
