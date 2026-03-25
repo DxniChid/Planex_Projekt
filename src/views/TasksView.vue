@@ -170,38 +170,72 @@ const showSidebar = ref(false)
     </div>
   </div>
 
-  <button class="add" @click="showChoiceModal = true">+</button>
+   <button class="add" @click="showChoiceModal = true">+</button>    
 
   <div v-if="showChoiceModal" class="choice-overlay" @click.self="showChoiceModal = false">
     <div class="choice-box">
-      <button @click="openTaskModal()">Aufgabe</button>
+      <button @click="openTaskModal">Aufgabe</button>
       <button @click="showTextModal = true; showChoiceModal = false">Freitext</button>
-      <button @click="showCategoryModal = true; showChoiceModal = false">Kategorie</button>
+      <button @click="showCategoryModal = true; showChoiceModal = false">Kategorie</button> 
     </div>
   </div>
 
   <div v-if="showTaskModal" class="modal-overlay" @click.self="showTaskModal = false">
     <div class="modal">
-      <h3>{{ editingTaskId !== null ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}</h3>
-      <input type="text" v-model="newTask.title" placeholder="Titel" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
-      <input type="time" v-model="newTask.time" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
-      <textarea v-model="newTask.task" placeholder="Aufgabenbeschreibung" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box; height: 80px;"></textarea>
-      <select v-model.number="newTask.category" class="category-select" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+      <h3>Neue Aufgabe</h3>
+      <input
+        type="text"
+        v-model="newTask.title"
+        placeholder="Titel der Aufgabe"
+        class="input"
+      />
+
+      <input
+        type="text"
+        v-model="newTask.task"
+        placeholder="Beschreibung (max. 100 Zeichen)"
+        maxlength="100"
+        class="input"
+      />
+
+      <input
+        type="time"
+        v-model="newTask.time"
+        class="input"
+      />
+
+      <select v-model.number="newTask.category" class="input">
         <option :value="null">Keine Kategorie</option>
         <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
       </select>
+
       <div class="modal-actions">
         <button class="cancel" @click="showTaskModal = false">Abbrechen</button>
-        <button class="create" @click="createTask">Speichern</button>
+        <button class="create" @click="createTask">Erstellen</button>
       </div>
     </div>
   </div>
 
   <div v-if="showCategoryModal" class="modal-overlay" @click.self="showCategoryModal = false">
     <div class="modal">
-      <h3>Kategorie erstellen</h3>
-      <input type="text" v-model="newCategory.name" placeholder="Name" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;" />
-      <input type="color" v-model="newCategory.color" class="input" style="width: 100%; height: 40px; margin-bottom: 10px; box-sizing: border-box;" />
+      <h2>Kategorie erstellen</h2>
+
+      <input
+        type="text"
+        v-model="newCategory.name"
+        placeholder="Name (max. 50 Zeichen)"
+        maxlength="50"
+        class="input"
+      />
+
+      <label>Farbe wählen:</label>
+      <input
+        type="color"
+        v-model="newCategory.color"
+        class="input"
+        style="height: 50px; width: 100%; padding: 0; border-radius: 8px;"
+      />
+
       <div class="modal-actions">
         <button class="cancel" @click="showCategoryModal = false">Abbrechen</button>
         <button class="create" @click="createCategory">Erstellen</button>
@@ -211,11 +245,19 @@ const showSidebar = ref(false)
 
   <div v-if="showTextModal" class="modal-overlay" @click.self="showTextModal = false">
     <div class="modal">
-      <h3>Freitext hinzufügen</h3>
-      <textarea v-model="newText.content" placeholder="Text..." class="input" style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
+      <h2>Freitext</h2>
+
+      <textarea
+        v-model="newText.content"
+        placeholder="Text eingeben..."
+        class="input"
+        rows="5"
+        style="resize: none;"
+      ></textarea>
+
       <div class="modal-actions">
         <button class="cancel" @click="showTextModal = false">Abbrechen</button>
-        <button class="create" @click="createText">Speichern</button>
+        <button class="create" @click="createText">Erstellen</button>
       </div>
     </div>
   </div>
@@ -366,106 +408,5 @@ h1 {
   flex-direction: column;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
 
-.modal {
-  background: #d5e8f2;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 400px;
-  width: 90%;
-}
-
-.input {
-  padding: 8px;
-  font-size: 14px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-}
-
-textarea.input {
-  font-family: inherit;
-  resize: vertical;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.modal-actions button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.cancel {
-  background: #ccc;
-  color: #333;
-}
-
-.cancel:hover {
-  background: #bbb;
-}
-
-.create {
-  background: #8AB3C2;
-  color: white;
-}
-
-.create:hover {
-  background: #6a94a8;
-}
-
-.choice-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.choice-box {
-  background: #d5e8f2;
-  border-radius: 8px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 250px;
-}
-
-.choice-box button {
-  padding: 12px;
-  background: #8AB3C2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.choice-box button:hover {
-  background: #6a94a8;
-}
 </style>
