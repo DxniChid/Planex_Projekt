@@ -29,7 +29,7 @@ export default{
     <h1>Anmeldung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(email)">
-            <div id="input"><label for="name">Email</label> <br><input type="text" name="name" v-model="email"></div>
+            <div id="input"><label for="name">Email</label> <br><input type="email" name="name" v-model="email"></div>
             <br>
             <div><label for="email">Passwort</label><br> <input type="password" name="name" v-model="password" required></div>
             <button type="submit">Anmelden</button>
