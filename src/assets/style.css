@@ -35,6 +35,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   font-size: 20px;
+  margin-bottom: 120px;
 }
 
 .timeline-row {
@@ -78,7 +79,6 @@ body {
 
 .add {
   display: block;
-  margin: 120px auto 60px auto;
   width: 70px;
   height: 70px;
   font-size: 50px;
@@ -93,11 +93,9 @@ body {
 
 /* Auswahl Popup */
 .choice-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+
 }
 
 .choice-box {
