@@ -204,4 +204,16 @@ button.add {
   }
 }
 
+@media (min-width: 1024px) {  
+
+
+  .sidebar-settings {
+    position: absolute;
+    bottom: 20px;     
+    left: 20px;       
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
 </style>
