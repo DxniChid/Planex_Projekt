@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 
+
 // Initialize Store
 const store = usePlanexStore()
 // Extract reactive data from store - use "tasks" not "todayItems"
@@ -129,6 +130,14 @@ const showSidebar = ref(false)
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
           <router-link to="/freetext" class="nav-link">Freitext</router-link>
         </nav>
+
+        <router-link
+          to="/settings"
+          class="sidebar-settings"
+          @click="showSidebar = false"
+        >
+          ⚙️
+        </router-link> 
       </div>
     </div>
     <img :src="logo" alt="Planex Logo" class="logo-img" />
@@ -384,6 +393,13 @@ button.add {
     position: absolute;
     margin-left: 120px;
     top: 220px;
+  }
+    .sidebar-settings {
+    position: absolute;
+    bottom: 20px;     
+    left: 20px;       
+    font-size: 24px;
+    cursor: pointer;
   }
 }
 </style>
