@@ -2,23 +2,60 @@
 import "@/assets/style.css"
 import "@/assets/laptops.css"
 import "@/assets/phones.css"
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
-import { usePlanexStore } from "@/stores/planexStore"
-import { storeToRefs } from "pinia"
-
-const store = usePlanexStore()
-const { categories, user } = storeToRefs(store)
 
 const showSidebar = ref(false)
-
 function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
+const categories = ref([])
+
+const showEditModal = ref(false)
+const editingCategory = ref({ id: null, name: "", color: "#8AB3C2" })
+
+onMounted(() => {
+  const savedCategories = localStorage.getItem("categories")
+  if (savedCategories) {
+    categories.value = JSON.parse(savedCategories)
+  }
+})
+
 function deleteCategory(id) {
-  store.deleteCategory(id)
+  categories.value = categories.value.filter(cat => cat.id !== id)
+  localStorage.setItem("categories", JSON.stringify(categories.value))
+}
+
+function startEdit(category) {
+  editingCategory.value = { ...category }
+  showEditModal.value = true
+}
+
+function editCategory() {
+  const index = categories.value.findIndex(c => c.id === editingCategory.value.id)
+  if (index !== -1) {
+    categories.value[index] = { ...editingCategory.value }
+    localStorage.setItem("categories", JSON.stringify(categories.value))
+  }
+  showEditModal.value = false
+  editingCategory.value = { id: null, name: "", color: "#8AB3C2" }
+}
+
+const showCreateModal = ref(false)
+const newCategory = ref({ name: "", color: "#8AB3C2" })
+
+function createCategory() {
+  if (!newCategory.value.name.trim()) return
+  categories.value.push({
+    id: Date.now(),
+    name: newCategory.value.name,
+    color: newCategory.value.color
+  })
+  localStorage.setItem("categories", JSON.stringify(categories.value))
+  newCategory.value = { name: "", color: "#8AB3C2" }
+  showCreateModal.value = false
 }
 </script>
 
@@ -31,9 +68,8 @@ function deleteCategory(id) {
           <div class="profile-pic">
             <img :src="profile" alt="Profilbild" />
           </div>
-          <div class="profile-name">{{ user.name }}</div>
+          <div class="profile-name">Max Mustermann</div>
         </div>
-
         <nav class="sidebar-nav">
           <router-link to="/" class="nav-link">Startseite</router-link>
           <router-link to="/task" class="nav-link">Aufgaben</router-link>
@@ -41,16 +77,11 @@ function deleteCategory(id) {
           <router-link to="/kategorien" class="nav-link">Kategorien</router-link>
           <router-link to="/freetext" class="nav-link">Freitext</router-link>
         </nav>
-        <router-link
-          to="/settings"
-          class="sidebar-settings"
-          @click="showSidebar = false"
-        >
+        <router-link to="/settings" class="sidebar-settings" @click="showSidebar = false">
           ⚙️
         </router-link>
       </div>
     </div>
-
     <img :src="logo" alt="Planex Logo" class="logo-img" />
   </header>
 
@@ -61,25 +92,38 @@ function deleteCategory(id) {
       Noch keine Kategorien vorhanden.
     </div>
 
-    <div v-else class="card">
-      <div 
-        v-for="category in categories" 
-        :key="category.id" 
-        class="category-item"
-      >
-        <span class="category-name">
-          {{ category.name }}
-        </span>
-
-        <button 
-          class="delete-btn"
-          @click="deleteCategory(category.id)"
-        >
-          ✖
-        </button>
+    <div v-else class="notes-grid">
+      <div v-for="cat in categories" :key="cat.id" class="note-card" :style="{ background: cat.color }">
+        <p>{{ cat.name }}</p>
+        <button class="edit-btn" @click="startEdit(cat)">Bearbeiten</button>
+        <button class="delete-btn" @click="deleteCategory(cat.id)">Löschen</button>
       </div>
     </div>
   </main>
+
+  <div v-if="showEditModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Kategorie bearbeiten</h2>
+      <input type="text" v-model="editingCategory.name" placeholder="Name" class="input"/>
+      <input type="color" v-model="editingCategory.color" class="input" style="height:50px; width:100%; padding:0; border-radius:8px;" />
+      <div class="modal-actions">
+        <button class="cancel" @click="showEditModal = false">Abbrechen</button>
+        <button class="create" @click="editCategory">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="showCreateModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Neue Kategorie</h2>
+      <input type="text" v-model="newCategory.name" placeholder="Name" class="input"/>
+      <input type="color" v-model="newCategory.color" class="input" style="height:50px; width:100%; padding:0; border-radius:8px;" />
+      <div class="modal-actions">
+        <button class="cancel" @click="showCreateModal = false">Abbrechen</button>
+        <button class="create" @click="createCategory">Erstellen</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -89,20 +133,20 @@ function deleteCategory(id) {
 
 .page-title {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 32px;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 28px;
 }
 
-.card {
-  background: #D5E8F2;
-  margin: 0 auto;
-  padding: 20px;
-  width: 100%;
-  max-width: 900px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  min-height: auto;
+.create-btn {
+  display: block;
+  margin: 10px auto 20px auto;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .empty-text {
@@ -110,72 +154,6 @@ function deleteCategory(id) {
   margin-top: 40px;
   font-size: 18px;
   color: #777;
-}
-
-.category-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  background: #f4f6f8;
-  border-radius: 8px;
-  border-left: 4px solid #8AB3C2;
-  transition: all 0.2s ease;
-}
-
-.category-item:hover {
-  background: #e8eef4;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.category-item:last-child {
-  margin-bottom: 0;
-}
-
-.category-name {
-  font-size: 18px;
-  font-weight: 500;
-  color: #333;
-  flex: 1;
-}
-
-.delete-btn {
-  background: transparent;
-  border: none;
-  color: #d32f2f;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.delete-btn:hover {
-  background: rgba(211, 47, 47, 0.1);
-  color: #b71c1c;
-}
-
-.delete-btn:active {
-  transform: scale(0.95);
-}
-
-.create-btn {
-  display: block;
-  margin: 20px auto;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  background: #8AB3C2;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.create-btn:hover {
-  background: #6a94a8;
 }
 
 .notes-grid {
@@ -196,6 +174,18 @@ function deleteCategory(id) {
   position: relative;
 }
 
+.delete-btn {
+  margin-top: 100px;
+  margin-right: 5px;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  font-weight: bolder;
+}
+
 .edit-btn {
   margin-top: 10px;
   margin-right: 5px;
@@ -206,16 +196,6 @@ function deleteCategory(id) {
   background: #ffffff;
   color: rgb(0, 0, 0);
   font-weight: bold;
-  transition: all 0.2s;
 }
 
-.edit-btn:hover {
-  background: #f0f0f0;
-}
-
-h1 {
-  font-size: 40px;
-  text-align: center;
-  margin-bottom: 40px;
-}
 </style>
