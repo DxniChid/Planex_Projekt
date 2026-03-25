@@ -132,6 +132,13 @@ const showSidebar = ref(false)
       </div>
     </div>
     <img :src="logo" alt="Planex Logo" class="logo-img" />
+            <router-link
+          to="/settings"
+          class="sidebar-settings"
+          @click="showSidebar = false"
+        >
+          ⚙️
+        </router-link>
   </header>
 
   <h1>Aufgaben</h1>
@@ -222,37 +229,8 @@ const showSidebar = ref(false)
 </template>
 
 <style scoped>
-button.add {
-  position: fixed;
-  bottom: 160px;
-  right: 48%;
-  transform: translateX(-45%);
-  width: 70px;
-  height: 70px;
-  font-size: 50px;
-  color: #fff;
-  background-color: #8AB3C2;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  padding: 0;
-}
-button.add {
-  position: inherit;
-  display: block;
-  width: 70px;
-  height: 70px;
-  font-size: 50px;
-  color: #fff;
-  background-color: #8AB3C2;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
+
+
 h1 {
   text-align: center;
   margin-bottom: 40px;
@@ -262,6 +240,7 @@ h1 {
   width: 324px;
   margin: auto;
   position: relative;
+  height: 100%;
 }
 
 .search-container {
@@ -391,6 +370,22 @@ h1 {
   border: none;
   border-radius: 50%;
   cursor: pointer;
+}
+}
+
+@media (min-width: 1024px) {
+button.add {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  color: #fff;
+  background-color: #8AB3C2;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  top: 600px;
 }
 }
 </style>
