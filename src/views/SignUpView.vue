@@ -27,7 +27,7 @@ export default {
     <h1>Registrierung</h1>
     <div id="login">
         <form v-on:submit.prevent="checkAcc(prename, email)">
-            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename"></div>
+            <div id="input"><label for="name">Vorname*</label> <br><input type="text" name="name" v-model="prename" required></div>
             <br>
             <div id="input"><label for="name">Nachname</label> <br><input type="text" name="name" v-model="name"></div>
             <br>

@@ -1,7 +1,6 @@
 <script setup>
 import "@/assets/style.css"
 import "@/assets/laptops.css"
-import "@/assets/phones.css"
 import { ref } from "vue"
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
@@ -23,7 +22,9 @@ const editingText = ref({ id: null, content: "" })
 
 // 🔹 Löschen
 function deleteText(id) {
-  store.deleteFreeText(id)
+  if (confirm("Möchtest du diesen Freitext wirklich löschen?")) {
+    store.deleteFreeText(id)
+  }
 }
 
 // 🔹 Bearbeiten starten
@@ -38,6 +39,8 @@ function editText() {
   showEditModal.value = false
   editingText.value = { id: null, content: "" }
 }
+
+
 </script>
 
 <template>
@@ -192,5 +195,11 @@ function editText() {
   background: #ffffff;
   color: rgb(0, 0, 0);
   font-weight: bold;
+}
+@media (max-width: 600px){
+  .note-card {
+    width: 370px;
+    margin-left: 30px;
+  }
 }
 </style>

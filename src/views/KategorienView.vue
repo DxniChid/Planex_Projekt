@@ -206,10 +206,18 @@ function handleCreate() {
   font-weight: bold;
 }
 
+.color-input {
+  width: 60px;   
+  height: 35px;  
+  border: none;
+  cursor: pointer;
+  border-radius: 4px; 
+}
 @media (max-width: 700px){
 
   .note-card {
     width: 370px;
+    margin-left: 30px;
   }
 }
 </style>

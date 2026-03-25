@@ -13,8 +13,9 @@ function goHome() {
 }
 
 function logout() {
-  alert("Logged out!")
-  router.push("/login")
+  if (confirm("Möchtest du dich wirklich abmelden?")) {
+    router.push("/login")
+  }
 }
 
 function goSupport() {

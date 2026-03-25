@@ -108,6 +108,11 @@ function selectStatus(status) {
     showFilterMenu.value = false
   }
 }
+function deleteTask(id) {
+  if (confirm("Möchtest du diese Aufgabe wirklich löschen?")) {
+    store.deleteTask(id)
+  }
+}
 
 const showSidebar = ref(false)
 </script>
@@ -161,8 +166,7 @@ const showSidebar = ref(false)
         
         <span class="status" :class="item.status" @click="store.toggleTaskStatus(item.id)" style="cursor: pointer;"></span>
         <span class="edit" @click="openTaskModal(item, item.id)">✏️</span>
-        <span class="icon-btn delete-btn" @click="store.deleteTask(item.id)">🗑️</span>
-      </div>
+        <span class="icon-btn delete-btn" @click="deleteTask(item.id)">🗑️</span>      </div>
     </div>
 
     <div class="filter" style="position: relative;">
