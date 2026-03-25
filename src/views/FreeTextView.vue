@@ -143,10 +143,11 @@ function editText() {
 
 .notes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(20px, 35rem));
   gap: 20px;
   padding: 10px;
 }
+
 
 .note-card {
   background: #dbe5f2;
