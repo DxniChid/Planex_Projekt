@@ -2,30 +2,36 @@
 import "@/assets/style.css"
 import "@/assets/laptops.css"
 import "@/assets/phones.css"
-import { ref, onMounted } from "vue"
+import { ref, computed } from "vue"
+import { usePlanexStore } from "@/stores/planexStore" // Adjust path if necessary
 import logo from "@/assets/logo.png"
 import profile from "@/assets/profile.jpg"
 
+// Initialize Store
+const store = usePlanexStore()
+
+// Sidebar Logic
 const showSidebar = ref(false)
 function toggleSidebar() {
   showSidebar.value = !showSidebar.value
 }
 
-const categories = ref([])
+// Access State from Store
+const categories = computed(() => store.categories)
 
+// Modals State
 const showEditModal = ref(false)
+const showCreateModal = ref(false)
+
 const editingCategory = ref({ id: null, name: "", color: "#8AB3C2" })
+const newCategory = ref({ name: "", color: "#8AB3C2" })
 
-onMounted(() => {
-  const savedCategories = localStorage.getItem("categories")
-  if (savedCategories) {
-    categories.value = JSON.parse(savedCategories)
+// --- Actions using Store ---
+
+function handleDelete(id) {
+  if (confirm("Möchtest du diese Kategorie wirklich löschen?")) {
+    store.deleteCategory(id)
   }
-})
-
-function deleteCategory(id) {
-  categories.value = categories.value.filter(cat => cat.id !== id)
-  localStorage.setItem("categories", JSON.stringify(categories.value))
 }
 
 function startEdit(category) {
@@ -33,27 +39,19 @@ function startEdit(category) {
   showEditModal.value = true
 }
 
-function editCategory() {
-  const index = categories.value.findIndex(c => c.id === editingCategory.value.id)
+function saveEdit() {
+  // We can use a custom action or just update the state directly if simple, 
+  // but for consistency let's assume you might add an updateCategory action:
+  const index = store.categories.findIndex(c => c.id === editingCategory.value.id)
   if (index !== -1) {
-    categories.value[index] = { ...editingCategory.value }
-    localStorage.setItem("categories", JSON.stringify(categories.value))
+    store.categories[index] = { ...editingCategory.value }
   }
   showEditModal.value = false
-  editingCategory.value = { id: null, name: "", color: "#8AB3C2" }
 }
 
-const showCreateModal = ref(false)
-const newCategory = ref({ name: "", color: "#8AB3C2" })
-
-function createCategory() {
+function handleCreate() {
   if (!newCategory.value.name.trim()) return
-  categories.value.push({
-    id: Date.now(),
-    name: newCategory.value.name,
-    color: newCategory.value.color
-  })
-  localStorage.setItem("categories", JSON.stringify(categories.value))
+  store.addCategory(newCategory.value.name, newCategory.value.color)
   newCategory.value = { name: "", color: "#8AB3C2" }
   showCreateModal.value = false
 }
@@ -62,13 +60,14 @@ function createCategory() {
 <template>
   <header class="header">
     <div class="settings" @click="toggleSidebar">☰</div>
+    
     <div v-if="showSidebar" class="sidebar-overlay" @click.self="showSidebar = false">
       <div class="sidebar">
         <div class="sidebar-profile">
           <div class="profile-pic">
             <img :src="profile" alt="Profilbild" />
           </div>
-          <div class="profile-name">Max Mustermann</div>
+          <div class="profile-name">{{ store.user.name }}</div>
         </div>
         <nav class="sidebar-nav">
           <router-link to="/" class="nav-link">Startseite</router-link>
@@ -86,17 +85,26 @@ function createCategory() {
   </header>
 
   <main class="categories-page">
-    <h1 class="page-title">Meine Kategorien</h1>
+    <div class="header-row">
+       <h1 class="page-title">Meine Kategorien</h1>
+    </div>
 
     <div v-if="categories.length === 0" class="empty-text">
       Noch keine Kategorien vorhanden.
     </div>
 
     <div v-else class="notes-grid">
-      <div v-for="cat in categories" :key="cat.id" class="note-card" :style="{ background: cat.color }">
-        <p>{{ cat.name }}</p>
-        <button class="edit-btn" @click="startEdit(cat)">Bearbeiten</button>
-        <button class="delete-btn" @click="deleteCategory(cat.id)">Löschen</button>
+      <div 
+        v-for="cat in categories" 
+        :key="cat.id" 
+        class="note-card" 
+        :style="{ backgroundColor: cat.color }"
+      >
+        <p><strong>{{ cat.name }}</strong></p>
+        <div class="card-actions">
+          <button class="edit-btn" @click="startEdit(cat)">Bearbeiten</button>
+          <button class="delete-btn" @click="handleDelete(cat.id)">Löschen</button>
+        </div>
       </div>
     </div>
   </main>
@@ -104,11 +112,11 @@ function createCategory() {
   <div v-if="showEditModal" class="modal-overlay">
     <div class="modal">
       <h2>Kategorie bearbeiten</h2>
-      <input type="text" v-model="editingCategory.name" placeholder="Name" class="input"/>
-      <input type="color" v-model="editingCategory.color" class="input" style="height:50px; width:100%; padding:0; border-radius:8px;" />
+      <input type="text" v-model="editingCategory.name" class="input"/>
+      <input type="color" v-model="editingCategory.color" class="color-input" />
       <div class="modal-actions">
         <button class="cancel" @click="showEditModal = false">Abbrechen</button>
-        <button class="create" @click="editCategory">Speichern</button>
+        <button class="create" @click="saveEdit">Speichern</button>
       </div>
     </div>
   </div>
@@ -117,10 +125,10 @@ function createCategory() {
     <div class="modal">
       <h2>Neue Kategorie</h2>
       <input type="text" v-model="newCategory.name" placeholder="Name" class="input"/>
-      <input type="color" v-model="newCategory.color" class="input" style="height:50px; width:100%; padding:0; border-radius:8px;" />
+      <input type="color" v-model="newCategory.color" class="color-input" />
       <div class="modal-actions">
         <button class="cancel" @click="showCreateModal = false">Abbrechen</button>
-        <button class="create" @click="createCategory">Erstellen</button>
+        <button class="create" @click="handleCreate">Erstellen</button>
       </div>
     </div>
   </div>
@@ -158,7 +166,7 @@ function createCategory() {
 
 .notes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(20px, 35rem));
   gap: 20px;
   padding: 10px;
 }
