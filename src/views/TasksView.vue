@@ -132,13 +132,7 @@ const showSidebar = ref(false)
       </div>
     </div>
     <img :src="logo" alt="Planex Logo" class="logo-img" />
-            <router-link
-          to="/settings"
-          class="sidebar-settings"
-          @click="showSidebar = false"
-        >
-          ⚙️
-        </router-link>
+
   </header>
 
   <h1>Aufgaben</h1>
@@ -384,8 +378,12 @@ button.add {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 100;
   top: 600px;
 }
+  .choice-overlay {
+    position: absolute;
+    margin-left: 120px;
+    top: 220px;
+  }
 }
 </style>
