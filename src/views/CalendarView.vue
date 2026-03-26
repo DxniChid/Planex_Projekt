@@ -180,7 +180,7 @@ function goToTask() {
       </li>
     </ul>
 
-    <button @click="showTaskPopup = false">Schließen</button>
+    <button id="close" @click="showTaskPopup = false">Schliessen</button>
   </div>
 </div>
 </template>
@@ -277,9 +277,16 @@ function goToTask() {
 }
 
 .popup {
-  background:white;
+  background:rgb(202, 221, 224);
   padding:20px;
   border-radius:10px;
   width: 300px;
+  font-weight: lighter;
+}
+
+#close {
+  border-radius: 5px;
+  background-color: white;
+  border: none;
 }
 </style>
