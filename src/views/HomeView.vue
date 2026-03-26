@@ -217,5 +217,28 @@ button.add {
     cursor: pointer;
   }
 }
+@media (min-width: 768px) {
 
+  .logo-img {
+    height: 90px;
+  }
+
+  .welcome h1 {
+    font-size: 40px;
+  }
+
+  .welcome h2 {
+    font-size: 28px;
+  }
+
+  .card {
+    width: 80%;
+  }
+
+  .add {
+    width: 80px;
+    height: 80px;
+    font-size: 55px;
+  }
+}
 </style>
