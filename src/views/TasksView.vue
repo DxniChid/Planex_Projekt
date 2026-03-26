@@ -164,12 +164,12 @@ const showSidebar = ref(false)
         <span v-if="item.category" class="task-category">{{ store.getCategoryById(item.category)?.name }}</span>
         <span class="task-time">{{ item.time }}</span>
         <span 
-          class="status" 
-          :class="item.status"
-          :title="item.status === 'green' ? 'Erledigt' : 'Offen'"
-          @click="store.toggleTaskStatus(item.id)"
-          style="cursor: pointer;">
-        </span>
+        class="status" 
+        :class="item.status"
+        :title="item.status === 'green' ? 'Erledigt' : 'Offen'"
+        @click="store.toggleTaskStatus(item.id)"
+        style="cursor: pointer;">
+      </span>
         <span class="edit" @click="openTaskModal(item, item.id)">✏️</span>
         <span class="icon-btn delete-btn" @click="deleteTask(item.id)">🗑️</span>      </div>
     </div>
@@ -329,6 +329,7 @@ h1 {
 
 .filter {
   margin-top: 10px;
+  margin-left: 243px;
 }
 
 .filter button {
