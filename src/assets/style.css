@@ -4,13 +4,16 @@ body {
 }
 
 .header {
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
+  padding: 20px;
 }
 
 .settings {
+  position: absolute;
+  left: 20px;
   font-size: 40px;
   color: #A8D3E9;
   cursor: pointer;
@@ -18,13 +21,11 @@ body {
 
 .logo-img {
   height: 80px;
-  margin-left: 42%;
-  padding: 50px;
 }
 
 .welcome {
-  padding: 16px;
-  margin-left: 46%;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .card {
