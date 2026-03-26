@@ -9,7 +9,21 @@ import { storeToRefs } from "pinia"
 
 const store = usePlanexStore()
 const { user } = storeToRefs(store)
+const { tasks } = storeToRefs(store)
 
+function hasTasks(day) {
+  if (!day) return false
+  const dayStr = `${year.value}-${String(month.value+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`
+  return tasks.value.some(task => task.date === dayStr)
+}
+const showTaskPopup = ref(false)
+
+const tasksForSelectedDay = computed(() => {
+  if (!selectedDay.value) return []
+
+  const dayStr = `${year.value}-${String(month.value+1).padStart(2,'0')}-${String(selectedDay.value).padStart(2,'0')}`
+  return tasks.value.filter(task => task.date === dayStr)
+})
 const router = useRouter();
 
 const showSidebar = ref(false)
@@ -73,6 +87,9 @@ function isToday(day) {
 
 function selectDay(day) {
   selectedDay.value = day
+  if (hasTasks(day)) {
+    showTaskPopup.value = true
+  }
 }
 
 function goToTask() {
@@ -131,23 +148,41 @@ function goToTask() {
     </div>
 
     <div class="days">
-      <div
-        v-for="(day, index) in daysInMonth"
-        :key="index"
-        class="day"
-        :class="{ selected: day === selectedDay }"
-        @click="day && selectDay(day)"
-      >
+    <div
+      v-for="(day, index) in daysInMonth"
+      :key="index"
+      class="day"
+      :class="{ selected: day === selectedDay, 'has-task': hasTasks(day) }"
+      @click="day && selectDay(day)"
+    >
           <span v-if="isToday(day)" class="today-dot"></span>
         {{ day }}
       </div>
     </div>
+
 
     <button class="overview-btn" @click="goToTask">
       Aufgaben im Überblick
     </button>
 
   </div>
+      <div v-if="showTaskPopup" class="popup-overlay" @click.self="showTaskPopup = false">
+  <div class="popup">
+    <h3>Aufgaben am {{ selectedDay }}.{{ month + 1 }}.{{ year }}</h3>
+
+    <div v-if="tasksForSelectedDay.length === 0">
+      Keine Aufgaben
+    </div>
+
+    <ul v-else>
+      <li v-for="task in tasksForSelectedDay" :key="task.id">
+        <strong>{{ task.time }}</strong> - {{ task.title }}
+      </li>
+    </ul>
+
+    <button @click="showTaskPopup = false">Schließen</button>
+  </div>
+</div>
 </template>
 
 <style scoped>
@@ -225,5 +260,26 @@ function goToTask() {
   border-radius: 50%;
   left: 19px;
   bottom: 30px;
+}
+
+.has-task {
+  background-color: #a8cbd7;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.popup {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  width: 300px;
 }
 </style>
