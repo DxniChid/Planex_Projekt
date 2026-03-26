@@ -23,7 +23,8 @@ const newTask = ref({
   task: "", 
   time: "",
   status: "red",
-  category: null
+  category: null,
+  date: null
 })
 
 const newCategory = ref({ name: "", color: "#8AB3C2" })
@@ -39,18 +40,17 @@ function openTaskModal(item = null, id = null) {
     newTask.value = { ...item }
     editingTaskId.value = id
   } else {
-    newTask.value = { title: "", task: "", time: "", status: "red", category: null }
+    newTask.value = { title: "", task: "", time: "", status: "red", category: null, date: null }
     editingTaskId.value = null
   }
 }
 
 function createTask() {
-  if (!newTask.value.title || !newTask.value.time) {
-    alert("Bitte Titel und Uhrzeit angeben!")
+  if (!newTask.value.title || !newTask.value.time || !newTask.value.date) {
+    alert("Bitte Titel, Uhrzeit und Datum angeben!")
     return
   }
 
-  // Use store actions with ID not index
   if (editingTaskId.value !== null) {
     store.updateTask(editingTaskId.value, newTask.value)
   } else {
@@ -199,6 +199,8 @@ const showSidebar = ref(false)
       <h3>{{ editingTaskId !== null ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}</h3>
       <input type="text" v-model="newTask.title" placeholder="Titel" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
       <input type="time" v-model="newTask.time" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;"/>
+      <input type="date" v-model="newTask.date" class="input" 
+        style="width: 100%; margin-bottom: 10px; box-sizing: border-box;" />
       <textarea v-model="newTask.task" placeholder="Aufgabenbeschreibung" class="input" style="width: 100%; margin-bottom: 10px; box-sizing: border-box; height: 80px;"></textarea>
       <select v-model.number="newTask.category" class="category-select" style="width: 100%; padding: 8px; margin-bottom: 10px;">
         <option :value="null">Keine Kategorie</option>
